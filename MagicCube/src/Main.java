@@ -18,11 +18,11 @@ public class Main {
 			Board b = new Board(N, magicSum);
 			b.generateBoard();
 			b.printBoard();
-			System.out.println();
-			System.out.println("Horizontal sum = " + b.getHorizontalSum(9));
-			System.out.println("Vertical sum = " + b.getVerticalSum(1));
-			System.out.println("Back Diagonal sum = " + b.getBackDiagonalSum());
-			System.out.println("Forward Diagonal sum = " + b.getForwardDiagonalSum());
+//			System.out.println();
+//			System.out.println("Horizontal sum = " + b.getHorizontalSum(9));
+//			System.out.println("Vertical sum = " + b.getVerticalSum(1));
+//			System.out.println("Back Diagonal sum = " + b.getBackDiagonalSum());
+//			System.out.println("Forward Diagonal sum = " + b.getForwardDiagonalSum());
 		}
 		
 
