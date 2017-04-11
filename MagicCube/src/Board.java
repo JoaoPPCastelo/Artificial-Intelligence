@@ -114,6 +114,7 @@ public class Board {
 		for (int i = 0; i < n+2; i++) {
 			System.out.print(magicSum + "\t");
 		}
+		System.out.println();
 	}
 
 	/**

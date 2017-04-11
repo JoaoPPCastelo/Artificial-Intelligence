@@ -43,8 +43,9 @@ public class Main {
 				
 				// compute and print the elapsedTime
 				long elapsedTime = System.nanoTime() - startIteration;
-				System.out.println("elapsed time: " + elapsedTime + " . Magic square of size " + N + ":");
-				
+				double seconds = (double)elapsedTime / 1000000000.0;
+				System.out.println("elapsed time: " + seconds + " seconds. Magic square of size " + N + ":");
+
 				// print the final board
 				b.printBoard();
 				
@@ -54,10 +55,18 @@ public class Main {
 		}
 		
 		if (DEBUG) {
-			System.out.println("Quadrado magico de ordem = " + N);
+			// start the clock for elapsedTime
+			long startIteration = System.nanoTime();
+
 			int magicSum = (int) ((N*(Math.pow(N, 2) + 1))/2);
 			Board b = new Board(N, magicSum);
 			b.generateBoard();
+
+			// compute and print the elapsedTime
+			long elapsedTime = System.nanoTime() - startIteration;
+			double seconds = (double)elapsedTime / 1000000000.0;
+			System.out.println("elapsed time: " + seconds + " seconds. Magic square of size " + N + ":");
+
 			b.printBoard();
 			
 //			System.out.println("----------------------------------------------------");
