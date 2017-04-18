@@ -12,7 +12,7 @@ public class Main {
 	private static int TIME = 2;
 	
 	// debug
-	public static boolean DEBUG = true;
+	public static boolean DEBUG = false;
 	
 	final static long NANOSEC_PER_SEC = 1000l*1000*1000;
 	
@@ -68,6 +68,12 @@ public class Main {
 			System.out.println("elapsed time: " + seconds + " seconds. Magic square of size " + N + ":");
 
 			b.printBoard();
+			
+			System.out.println("------------------------");
+			
+			b.computeFitness();
+			
+			b.select();
 			
 //			System.out.println("----------------------------------------------------");
 //			System.out.println("Horizontal sum = " + b.getHorizontalSum(9));

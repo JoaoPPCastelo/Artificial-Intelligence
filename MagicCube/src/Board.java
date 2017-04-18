@@ -1,12 +1,13 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
-
 
 public class Board {
 
 	private int n;
 	private int magicSum;
 	private ArrayList<Integer> board = new ArrayList<Integer>();
+	private ArrayList<Integer> fitness = new ArrayList<Integer>();
 	
 	/**
 	 * Construtor para uma board de tamanho N e com uma determinada soma magica
@@ -23,7 +24,7 @@ public class Board {
 	 * @param line - numero da linha em questao
 	 * @return soma de todos os valores que compoem essa linha
 	 */
-	public int getHorizontalSum(int line) {
+	private int getHorizontalSum(int line) {
 		int sum = 0;
 		for (int i = line * n; i < line*n + n; i++) {
 			sum += board.get(i);
@@ -36,7 +37,7 @@ public class Board {
 	 * @param collumn - numero da coluna em questao
 	 * @return soma de todos os valores que compoem essa coluna
 	 */
-	public int getVerticalSum(int collumn) {
+	private int getVerticalSum(int collumn) {
 		int sum = 0;
 		for (int i = collumn; i < n*n; i+=n) {
 			sum += board.get(i);
@@ -48,7 +49,7 @@ public class Board {
 	 * Obter a soma da diagonal \
 	 * @return soma de todos os valores que compoem essa diagonal
 	 */
-	public int getBackDiagonalSum() {
+	private int getBackDiagonalSum() {
 		int sum = 0;
 		for (int i = 0; i < n*n; i+=n+1) {
 			sum += board.get(i);
@@ -60,7 +61,7 @@ public class Board {
 	 * Obter a soma da diagonal /
 	 * @return soma de todos os valores que compoem essa diagonal
 	 */
-	public int getForwardDiagonalSum() {
+	private int getForwardDiagonalSum() {
 		int sum = 0;
 		for (int i = 9; i < n*n - n+1; i+=n-1) {
 			sum += board.get(i);
@@ -76,7 +77,7 @@ public class Board {
 	 *  caso contrario, todas as linhas, colunas e diagonais verificam a magicSum e entao e retornado true.   
 	 * @return true se a board e solucao, false caso nao seja
 	 */
-	private boolean evaluateBoard() {
+	private boolean isSolution() {
 		for(int i = 0; i < n; i++){
 			if (getHorizontalSum(i) != magicSum ||
 					getVerticalSum(i) != magicSum)
@@ -116,18 +117,90 @@ public class Board {
 		}
 		System.out.println();
 	}
+	
+	/**
+	 * Calcula o fitness da board e guarda esses valores num arrayList.
+	 * Sao usados como fitness os valores das somas das linhas, das colunas e das diagonais.
+	 */
+	public void computeFitness() {
+		// linhas
+		for (int i = 0; i < n; i++) {
+			fitness.add(getHorizontalSum(i));
+		}
+		
+		// colunas
+		for (int i = 0; i < 0; i++) {
+			fitness.add(getVerticalSum(i));
+		}
+		
+		//  diagonal /
+		fitness.add(getForwardDiagonalSum());
+		
+		// diagonal \
+		fitness.add(getBackDiagonalSum());
+	}
+	
+	/**
+	 * Metodo que seleciona os n/2 melhores candidatos
+	 */
+	public void select() {
+		
+		ArrayList<Integer> temp = new ArrayList<Integer>();
+		ArrayList<Integer> a = new ArrayList<Integer>();
+
+		for (int i = 0; i < n; i++) {
+			temp.add(Math.abs(fitness.get(i) - magicSum));
+		}
+		
+		if (Main.DEBUG) {
+			for (Integer t : temp)
+				System.out.println("temp = " + t + " ");
+		}
+		
+		for (int i = 0; i < n/2; i++) {
+			int min = Collections.min(temp);
+			
+			if (Main.DEBUG)
+				System.out.println("min = " + min);
+			
+			a.add(temp.indexOf(min));
+			
+			if (Main.DEBUG)
+				System.out.println("--> " + temp.indexOf(min));
+			
+			temp.set(temp.indexOf(min), 10000000);
+
+		}
+		
+		if (Main.DEBUG) {
+			for (int i = 0; i < n; i++) {
+				System.out.println(getHorizontalSum(i));
+			}
+			
+			for (Integer index : a) {
+				for (int i = index * n; i < index*n + n; i++) {
+					System.out.print(board.get(i) + " ");
+				}
+				System.out.println();
+			}
+		}
+	}
 
 	/**
-	 * Resolver o problema procurando uma board que cumpre os requisitos impostos
+	 * Resolve o problema procurando uma board que possua uma solucao
 	 */
 	public void solve() {
-		// TODO Auto-generated method stub
 		
-		
-		// se a board for solucao, sair
-		
-		
-		// caso contrario, continuar
-		
+		// corre enquanto nao encontrar solucao
+		while (!isSolution()) {
+			
+			computeFitness();
+			
+			// solve the problem
+			
+			
+			fitness.clear();
+			
+		}	
 	}
 }
