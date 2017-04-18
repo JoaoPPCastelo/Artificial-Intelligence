@@ -63,7 +63,7 @@ public class Board {
 	 */
 	private int getForwardDiagonalSum() {
 		int sum = 0;
-		for (int i = 9; i < n*n - n+1; i+=n-1) {
+		for (int i = n-1; i < n*n - n+1; i+=n-1) {
 			sum += board.get(i);
 		}
 		return sum;
@@ -105,17 +105,35 @@ public class Board {
 	 * Imprimir uma board de tamanho N
 	 */
 	public void printBoard() {
+//		for (int i = 1; i <= n*n; i++) {
+//			System.out.print("\t" + board.get(i-1));
+//			if (i % n == 0 && i != 0) {
+//				System.out.print("\t => " + magicSum);
+//				System.out.println();
+//			}
+//		}
+//		for (int i = 0; i < n+2; i++) {
+//			System.out.print(magicSum + "\t");
+//		}
+//		System.out.println();
+		
+		int line = 0;
+		
 		for (int i = 1; i <= n*n; i++) {
 			System.out.print("\t" + board.get(i-1));
 			if (i % n == 0 && i != 0) {
-				System.out.print("\t => " + magicSum);
+				System.out.print("\t => " + getHorizontalSum(line++));
 				System.out.println();
 			}
 		}
-		for (int i = 0; i < n+2; i++) {
-			System.out.print(magicSum + "\t");
+		
+		System.out.print(getForwardDiagonalSum() + "\t");
+		
+		for (int i = 0; i < n; i++) {
+			System.out.print(getVerticalSum(i) + "\t");
 		}
-		System.out.println();
+		
+		System.out.println(getBackDiagonalSum());
 	}
 	
 	/**
