@@ -127,16 +127,25 @@ public class Board {
 
 		Random randomGenerator = new Random();
 
-		for (int i = 1; i <= N*N; i++) {
-			board.add(i);
+//		for (int i = 1; i <= N*N; i++) {
+//			board.add(i);
+//		}
+//		
+//		for (int i = board.size() - 1; i >= 0; i--) {
+//			int index = randomGenerator.nextInt(i+1);
+//			int x = board.get(index);
+//			board.add(index, board.get(i));
+//			board.add(i, x);
+//		}
+		
+		while (board.size() < N*N) {
+			int random = randomGenerator.nextInt(N*N) + 1;
+			if (!board.contains(random)) 
+				board.add(random);
 		}
 		
-		for (int i = board.size() - 1; i >= 0; i--) {
-			int index = randomGenerator.nextInt(i+1);
-			int x = board.get(index);
-			board.add(index, board.get(i));
-			board.add(i, x);
-		}
+		System.out.println("Board created: " + board.toString());
+		
 	}
 	
 	/**
