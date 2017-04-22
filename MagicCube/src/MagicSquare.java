@@ -51,7 +51,7 @@ public class MagicSquare {
 		// the set of all visited indices so far
         final Set<Integer> visitedIndices = new HashSet<Integer>(size);
 	
-     // the indices of the current cycle
+        // the indices of the current cycle
         final List<Integer> indices = new ArrayList<Integer>(size);
 		
         // determine the starting index
@@ -60,18 +60,14 @@ public class MagicSquare {
 		int cycle = 1;
 		
 		while (visitedIndices.size() < size) {
-			
-			System.out.println("8");
-			
+				
             indices.add(idx);
-
+            
             Integer item = parent2.get(idx);
             idx = parent1.indexOf(item);
 
             while (idx != indices.get(0)) {
-            	
-            	System.out.println("9");
-            	
+            	            	
                 // add that index to the cycle indices
                 indices.add(idx);
                 // get the item in the second parent at that index
@@ -82,21 +78,14 @@ public class MagicSquare {
 
             // for even cycles: swap the child elements on the indices found in this cycle
             if (cycle++ % 2 != 0) {
-            	
-            	System.out.println("10");
-            	
-                for (int i : indices) {
-                	
-                	System.out.println("11");
-                	
+            	            	
+                for (int i : indices) {                	
                     Integer tmp = child1.get(i);
                     child1.set(i, child2.get(i));
                     child2.set(i, tmp);
                 }
             }
-
-            System.out.println("12");
-            
+          
             visitedIndices.addAll(indices);
             // find next starting index: last one + 1 until we find an unvisited index
             idx = (indices.get(0) + 1) % size;
@@ -117,9 +106,11 @@ public class MagicSquare {
 		Stack<Integer> indices = new Stack<Integer>();
 		
 		for (int i = 0; i < Main.MUTATIONS * 2; i++) {
-			int cromossomeIndex = random.nextInt(N*N);
-			if (!indices.contains(cromossomeIndex)) {
-				indices.add(cromossomeIndex);
+			while (indices.size() < Main.MUTATIONS * 2) {
+				int cromossomeIndex = random.nextInt(N*N);
+				if (!indices.contains(cromossomeIndex)) {
+					indices.add(cromossomeIndex);
+				}
 			}
 		}
 		
@@ -138,19 +129,15 @@ public class MagicSquare {
 		Queue<Board> temp = new PriorityQueue<Board>(11, new BoardComparator());
 		
 			while (findSolution() == null) {
-				
-				System.out.println("4");
-				
+							
 				for (int i = 0; i < Main.ELITE; i+=2) {
-					
-					System.out.println("5");
-					
+										
 					Board b1 = boards.poll();
 					Board b2 = boards.poll();
 					
-					b1.printBoard();
+					//b1.printBoard();
 					
-					b2.printBoard();
+					//b2.printBoard();
 					
 					
 					ArrayList<Integer> parent1 = b1.getRepresentation();
@@ -161,15 +148,11 @@ public class MagicSquare {
 					
 					// crossover
 					crossover(parent1, parent2, child1, child2);
-					
-					System.out.println("6");
-					
+										
 					// mutation
 					mutation(child1);
 					mutation(child2);
-					
-					System.out.println("7");
-					
+										
 					Board c1 = new Board(N, magicSum, child1);
 					Board c2 = new Board(N, magicSum, child2);
 					

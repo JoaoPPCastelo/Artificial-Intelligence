@@ -72,17 +72,11 @@ public class Main {
 			
 			MagicSquare ms = new MagicSquare(nBOARDS, N, magicSum);
 			
-			System.out.println("1");
-
 			ms.initializeGame();
-			
-			System.out.println("2");
-			
+						
 			// solve the problem
 			Board b = ms.solve();
-			
-			System.out.println("3");
-						
+									
 			// compute and print the elapsedTime
 			long elapsedTime = System.nanoTime() - startIteration;
 			double seconds = (double)elapsedTime / 1000000000.0;

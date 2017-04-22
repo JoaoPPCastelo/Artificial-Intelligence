@@ -98,28 +98,7 @@ public class Board {
 		}
 		return sum;
 	}
-	
-//	/**
-//	 * Verifica se a board em questao e soluccao.
-//	 * Verififica se existe alguma linha ou coluna cuja soma nao corresponda a soma magica. Caso esse
-//	 *  caso aconteca, e retornado false. Caso todas as linhas e colunas apresentem uma soma igual a
-//	 *  magicSum, e verificado se a soma das diagonais e diferente da magicSum. Caso seja, e retornado false,
-//	 *  caso contrario, todas as linhas, colunas e diagonais verificam a magicSum e entao e retornado true.   
-//	 * @return true se a board e solucao, false caso nao seja
-//	 */
-//	private boolean isSolution() {
-//		for(int i = 0; i < N; i++){
-//			if (getHorizontalSum(i) != magicSum ||
-//					getVerticalSum(i) != magicSum)
-//				return false;
-//		}
-//		if ((getBackDiagonalSum() != magicSum) || (getForwardDiagonalSum() != magicSum))
-//			return false;
-//			
-//		return true;
-//	}
-	
-	
+		
 	/**
 	 * Gerar uma nova board com numeros aleatorios e nao repetidos
 	 */
