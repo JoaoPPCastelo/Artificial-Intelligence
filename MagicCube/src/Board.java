@@ -177,7 +177,7 @@ public class Board {
 		}
 		
 		// colunas
-		for (int i = 0; i < 0; i++) {
+		for (int i = 0; i < N; i++) {
 			_fitness += Math.abs(magicSum - getVerticalSum(i));
 		}
 		
