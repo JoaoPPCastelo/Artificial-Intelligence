@@ -13,6 +13,8 @@ public class MagicSquare {
 	private int N;
 	private int magicSum;
 	private Queue<Board> boards;
+	
+	Random random = new Random();
 
 	/**
 	 * Construtor
@@ -36,15 +38,14 @@ public class MagicSquare {
 		for (int i = 0; i < nBOARDS; i++) {
 			// initialize and generate a new board 
 			Board b = new Board(N, magicSum);
-			// b.generateBoard();
 			boards.add(b);
-					
 		}	
 	}
 	
 	
+	// NAO ESTA A FUNCIONAR!!!!!!!!!!!!!!!!!!!!!!!!!
 	// based on: https://commons.apache.org/proper/commons-math/jacoco/org.apache.commons.math4.genetics/CycleCrossover.java.html
-	public void crossover(ArrayList<Integer> parent1, ArrayList<Integer> parent2, ArrayList<Integer> child1, ArrayList<Integer> child2) {
+	private void cycleCrossover(ArrayList<Integer> parent1, ArrayList<Integer> parent2, ArrayList<Integer> child1, ArrayList<Integer> child2) {
 				
 		int size = N*N;
 		
@@ -55,7 +56,6 @@ public class MagicSquare {
         final List<Integer> indices = new ArrayList<Integer>(size);
 		
         // determine the starting index
-		Random random = new Random();
 		int idx = random.nextInt(size);
 		int cycle = 1;
 		
@@ -98,11 +98,41 @@ public class MagicSquare {
             indices.clear();
         }
 		
+		indices.clear();
+		
 	}
 	
-	private void mutation(ArrayList<Integer> al) {
+	
+	
+	
+	private void crossover(ArrayList<Integer> parent1, ArrayList<Integer> parent2, ArrayList<Integer> child1, ArrayList<Integer> child2) {
+	
 		
-		Random random = new Random();
+		int crossoverPoint = random.nextInt((N*N)/2 + 5);
+		
+		for (int i = 0; i < crossoverPoint; i++) {
+			child1.add(parent1.get(i));
+			child2.add(parent2.get(i));
+		}
+		
+		for (int i = crossoverPoint; i < N*N; i++) {
+			child1.add(parent2.get(i));
+			child2.add(parent1.get(i));
+		}
+
+	}
+	
+	
+	
+	
+	/**
+	 * Metodo que efetua mutacoes numa board. 
+	 * O numero de mutacoes a serem efetuadas e definido na main, 
+	 * na variavel MUTATIONS
+	 * @param board - board onde sera feita a mutacao
+	 */
+	private void mutation(ArrayList<Integer> board) {
+		
 		Stack<Integer> indices = new Stack<Integer>();
 		
 		for (int i = 0; i < Main.MUTATIONS * 2; i++) {
@@ -117,12 +147,24 @@ public class MagicSquare {
 		while (!indices.isEmpty()) {
 			Integer idx = indices.pop();
 			Integer idy = indices.pop();
-			Integer temp = al.get(idx);
-			al.add(idx, al.get(idy));
-			al.add(idy, temp);			
+			Integer temp = board.get(idx);
+			board.add(idx, board.get(idy));
+			board.add(idy, temp);			
 		}
 	}
 	
+	/**
+	 * Para cada board, verificar se o fitness corresponde a 0 (board com solucao)
+	 * @return uma board caso senja encontrada solucao, null caso nao tenha sido encontrada solucao
+	 */
+	private Board findSolution() {
+		for (Board b : boards) {
+			if (b.getFitness() == 0) {
+				return b;
+			}
+		}
+		return null;
+	}	
 	
 	public Board solve() {
 		
@@ -135,18 +177,14 @@ public class MagicSquare {
 					Board b1 = boards.poll();
 					Board b2 = boards.poll();
 					
-					//b1.printBoard();
-					
-					//b2.printBoard();
-					
-					
 					ArrayList<Integer> parent1 = b1.getRepresentation();
 					ArrayList<Integer> parent2 = b2.getRepresentation();
 					
-					ArrayList<Integer> child1 = new ArrayList<Integer>(parent1);
-					ArrayList<Integer> child2 = new ArrayList<Integer>(parent2);
+					ArrayList<Integer> child1 = new ArrayList<Integer>();
+					ArrayList<Integer> child2 = new ArrayList<Integer>();
 					
 					// crossover
+					//cycleCrossover(parent1, parent2, child1, child2);
 					crossover(parent1, parent2, child1, child2);
 										
 					// mutation
@@ -161,24 +199,10 @@ public class MagicSquare {
 					temp.add(c1);
 					temp.add(c2);
 				}
-				boards = temp;
+				boards = new PriorityQueue<Board>(temp);
+				temp.clear();
 			}
 			
 			return findSolution();
 		}
-		
-	
-	/**
-	 * Para cada board, verificar se o 
-	 * @param boards
-	 * @return 
-	 */
-	private Board findSolution() {
-		for (Board b : boards) {
-			if (b.getFitness() == 0) {
-				return b;
-			}
-		}
-		return null;
-	}	
 }
