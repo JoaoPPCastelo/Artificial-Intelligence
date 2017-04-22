@@ -36,7 +36,7 @@ public class MagicSquare {
 		for (int i = 0; i < nBOARDS; i++) {
 			// initialize and generate a new board 
 			Board b = new Board(N, magicSum);
-			b.generateBoard();
+			// b.generateBoard();
 			boards.add(b);
 					
 		}	
