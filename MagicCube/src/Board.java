@@ -106,24 +106,19 @@ public class Board {
 
 		Random randomGenerator = new Random();
 
-//		for (int i = 1; i <= N*N; i++) {
-//			board.add(i);
-//		}
-//		
-//		for (int i = board.size() - 1; i >= 0; i--) {
-//			int index = randomGenerator.nextInt(i+1);
-//			int x = board.get(index);
-//			board.add(index, board.get(i));
-//			board.add(i, x);
-//		}
-		
-		while (board.size() < N*N) {
-			int random = randomGenerator.nextInt(N*N) + 1;
-			if (!board.contains(random)) 
-				board.add(random);
+		for (int i = 1; i <= N*N; i++) {
+			board.add(i);
 		}
 		
-		System.out.println("Board created: " + board.toString());
+		for (int i = board.size() - 1; i >= 0; i--) {
+			int index = randomGenerator.nextInt(i+1);
+			int x = board.get(index);
+			board.set(index, board.get(i));
+			board.set(i, x);
+		}
+		
+		if (Main.DEBUG)
+			System.out.println("Board created: " + board.toString());
 		
 	}
 	
