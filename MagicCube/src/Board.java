@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Stack;
 
 public class Board {
 
@@ -7,6 +8,7 @@ public class Board {
 	private int magicSum;
 	private int fitness;
 	private ArrayList<Integer> board = new ArrayList<Integer>();
+	private Random random;
 	
 	/**
 	 * Construtor para uma board gerada aleatoriamente de tamanho N e com uma determinada soma magica
@@ -16,6 +18,7 @@ public class Board {
 	public Board(int n, int magicSum) {
 		this.N = n;
 		this.magicSum = magicSum;
+		this.random = new Random();
 		generateBoard();
 		this.fitness = computeFitness();
 	}
@@ -172,50 +175,44 @@ public class Board {
 		
 		return _fitness;
 	}
-//	
-//	/**
-//	 * Metodo que seleciona os N/2 melhores candidatos
-//	 */
-//	public void select() {
-//		
-//		ArrayList<Integer> temp = new ArrayList<Integer>();
-//		ArrayList<Integer> a = new ArrayList<Integer>();
-//
-////		for (int i = 0; i < N; i++) {
-////			temp.add(Math.abs(fitness.get(i) - magicSum));
-////		}
-//		
-//		if (Main.DEBUG) {
-//			for (Integer t : temp)
-//				System.out.println("temp = " + t + " ");
-//		}
-//		
-//		for (int i = 0; i < N/2; i++) {
-//			int min = Collections.min(temp);
-//			
-//			if (Main.DEBUG)
-//				System.out.println("min = " + min);
-//			
-//			a.add(temp.indexOf(min));
-//			
-//			if (Main.DEBUG)
-//				System.out.println("--> " + temp.indexOf(min));
-//			
-//			temp.set(temp.indexOf(min), 10000000);
-//
-//		}
-//		
-//		if (Main.DEBUG) {
-//			for (int i = 0; i < N; i++) {
-//				System.out.println(getHorizontalSum(i));
-//			}
-//			
-//			for (Integer index : a) {
-//				for (int i = index * N; i < index*N + N; i++) {
-//					System.out.print(board.get(i) + " ");
-//				}
-//				System.out.println();
-//			}
-//		}
-//	}
+
+	public ArrayList<Board> crossover(Board b2, int min, int max) {
+		ArrayList<Board> childs = new ArrayList<Board>();
+		
+		ArrayList<Integer> child1 = this.getRepresentation();
+		ArrayList<Integer> child2 = b2.getRepresentation();
+		
+		ArrayList<Integer> sel1 = new ArrayList<Integer>(child2.subList(min, max));
+		ArrayList<Integer> sel2 = new ArrayList<Integer>(child1.subList(min, max));
+		
+		for (int i = min; i < max; i++) {
+			child1.remove(min);
+			child2.remove(min);
+		}
+		
+		for (int i = 0; i < child1.size(); i++) {
+			Integer ia = child1.get(i);
+			Integer ib =  find(ia, sel1, sel2);
+			if (ia != ib) {
+				child1.set(i, ib);
+				child2.set(child2.indexOf(ib), ia);
+			}
+		}
+		
+		child1.addAll(min, sel1);
+		child2.addAll(min, sel2);
+		
+		childs.add(new Board(this.N, this.magicSum, child1));
+		childs.add(new Board(this.N, this.magicSum, child2));
+		
+		return childs;
+	}
+
+	private Integer find(Integer ia, ArrayList<Integer> sel1, ArrayList<Integer> sel2) {
+		int index = sel1.indexOf(ia);
+		if (index == -1)
+			return index;
+		return find(sel2.get(index), sel1, sel2);
+	}
+	
 }

@@ -26,6 +26,13 @@ public class Main {
 	// na populacao e usados para reproducao
 	public static int ELITE = 4;
 	
+	// probabilidade de ocorrer mutacao
+	public static double pMutation = 0.75;
+	
+	// probabilidade de ocorrer crossover
+	public static double pCrossover = 0.15;
+	
+	
 	
 	// -----------------------------------------------------
 	// -------------------     MAIN     --------------------
