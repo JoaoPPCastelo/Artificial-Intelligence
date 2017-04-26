@@ -1,10 +1,8 @@
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
-import java.util.Set;
 import java.util.Stack;
 
 public class MagicSquare {
@@ -13,8 +11,7 @@ public class MagicSquare {
 	private int N;
 	private int magicSum;
 	private Queue<Board> boards;
-	
-	Random random = new Random();
+	private Random random;
 
 	/**
 	 * Construtor
@@ -27,7 +24,7 @@ public class MagicSquare {
 		this.N = N;
 		this.magicSum = magicSum;
 		boards = new PriorityQueue<Board>(11, new BoardComparator());
-
+		random = new Random();
 	}
 
 	/**
@@ -42,44 +39,21 @@ public class MagicSquare {
 		}	
 	}
 	
-		
+	/**
+	 * 	
+	 * @param b1
+	 * @param b2
+	 * @return
+	 */
 	private ArrayList<Board> pmxCrossover(Board b1, Board b2) {
-			
+		
+		
 		int a = (int) Math.ceil(((N*N) - 1) * random.nextDouble());
 		int b = (int) Math.ceil(((N*N) - 1) * random.nextDouble());
 		
 		ArrayList<Board> childs = b1.crossover(b2, Math.min(a, b), Math.max(a, b));
 	
 		return childs;
-		
-	}
-	
-	/**
-	 * Metodo que efetua mutacoes numa board. 
-	 * O numero de mutacoes a serem efetuadas e definido na main, 
-	 * na variavel MUTATIONS
-	 * @param board - board onde sera feita a mutacao
-	 */
-	private void mutation(ArrayList<Integer> board) {
-		
-		Stack<Integer> indices = new Stack<Integer>();
-		
-		for (int i = 0; i < Main.MUTATIONS * 2; i++) {
-			while (indices.size() < Main.MUTATIONS * 2) {
-				int cromossomeIndex = random.nextInt(N*N);
-				if (!indices.contains(cromossomeIndex)) {
-					indices.add(cromossomeIndex);
-				}
-			}
-		}
-		
-		while (!indices.isEmpty()) {
-			Integer idx = indices.pop();
-			Integer idy = indices.pop();
-			Integer temp = board.get(idx);
-			board.add(idx, board.get(idy));
-			board.add(idy, temp);			
-		}
 		
 	}
 	
@@ -104,42 +78,53 @@ public class MagicSquare {
 	public Board solve() {
 				
 			while (findSolution() == null) {
+				
+				ArrayList<Board> childs = new ArrayList<Board>();
 							
 				for (int i = 0; i < Main.ELITE; i+=2) {
 										
 					Board b1 = boards.poll();
 					Board b2 = boards.poll();
 					
-					ArrayList<Board> childs = new ArrayList<Board>();
-					
 					// crossover
-					if (Main.pCrossover >= random.nextDouble()) {
-						childs = pmxCrossover(b1, b2);
-					}
-					else {
-						childs.add(b1);
-						childs.add(b2);
-					}
-					
-					// para o cyclecrossover
-					ArrayList<Integer> child1 = new ArrayList<Integer>(childs.get(0).getRepresentation());
-					ArrayList<Integer> child2 = new ArrayList<Integer>(childs.get(1).getRepresentation());
-										
-					// mutation
-					if (Main.pMutation >= random.nextDouble() ) {
-						mutation(child1);
-						childs.set(0, new Board(this.N, this.magicSum, child1));
-						
-					}
-					
-					if (Main.pMutation >= random.nextDouble() ) {
-						mutation(child2);
-						childs.set(1, new Board(this.N, this.magicSum, child2));
+					//if (Main.pCrossover >= random.nextDouble()) {
+						childs.addAll(pmxCrossover(b1, b2));
+					//}
+				
+					// manter os pais
+					childs.add(b1);
+					childs.add(b2);
+				}
+				
+				
+				//System.out.println("childs = " + childs.size());
 
+				
+				// adicionar os pais e filhos
+				for (int i = 0; i < childs.size(); i++) {
+					boards.add(childs.get(i));
+				}
+				
+				childs.clear();
+				
+				// manter apenas os x melhores
+				List<Board> temp = new ArrayList<Board>(boards);
+				
+				//System.out.println("boards = " + boards.size());
+				//System.out.println("temp = " + temp.size());
+				
+				temp = temp.subList(0, Main.nBOARDS);
+				boards.clear();
+				boards.addAll(temp);
+				//temp.clear();
+				
+				if (findSolution() != null)
+					break;
+				
+				for(Board b : boards) {
+					if (Main.pMutation >= random.nextDouble() ) {
+						b.mutation();
 					}
-					
-					boards.add(childs.get(0));
-					boards.add(childs.get(1));
 				}
 			}
 			return findSolution();

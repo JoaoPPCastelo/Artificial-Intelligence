@@ -6,7 +6,7 @@ public class Main {
 	// -----------------------------------------------------
 	
 	// tamanho inicial da board
-	private static int N = 3;
+	private static int N = 4;
 	
 	// tempo de execucao (minutos)
 	private static int TIME = 2;
@@ -17,14 +17,14 @@ public class Main {
 	final static long NANOSEC_PER_SEC = 1000*1000*1000;
 	
 	// populacao a ser usada
-	private static int nBOARDS = 6;
+	public static int nBOARDS = 30;
 	
 	// numero de mutacoes a serem efetuadas em cada individuo
 	public static int MUTATIONS = 1;
 	
 	// numero de individuos com melhor fitness que sao mantidos 
 	// na populacao e usados para reproducao
-	public static int ELITE = 4;
+	public static int ELITE = 20;
 	
 	// probabilidade de ocorrer mutacao
 	public static double pMutation = 0.75;

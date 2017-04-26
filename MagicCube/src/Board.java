@@ -1,6 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
-import java.util.Stack;
 
 public class Board {
 
@@ -8,7 +8,7 @@ public class Board {
 	private int magicSum;
 	private int fitness;
 	private ArrayList<Integer> board = new ArrayList<Integer>();
-	private Random random;
+	private Random random  = new Random();
 	
 	/**
 	 * Construtor para uma board gerada aleatoriamente de tamanho N e com uma determinada soma magica
@@ -18,7 +18,6 @@ public class Board {
 	public Board(int n, int magicSum) {
 		this.N = n;
 		this.magicSum = magicSum;
-		this.random = new Random();
 		generateBoard();
 		this.fitness = computeFitness();
 	}
@@ -107,21 +106,19 @@ public class Board {
 	 */
 	public void generateBoard() {
 
-		Random randomGenerator = new Random();
-
 		for (int i = 1; i <= N*N; i++) {
 			board.add(i);
 		}
 		
 		for (int i = board.size() - 1; i >= 0; i--) {
-			int index = randomGenerator.nextInt(i+1);
+			int index = random.nextInt(i+1);
 			int x = board.get(index);
 			board.set(index, board.get(i));
 			board.set(i, x);
 		}
 		
-		if (Main.DEBUG)
-			System.out.println("Board created: " + board.toString());
+//		if (Main.DEBUG)
+//			System.out.println("Board created: " + board.toString());
 		
 	}
 	
@@ -176,31 +173,56 @@ public class Board {
 		return _fitness;
 	}
 
+	/**
+	 * 
+	 * @param b2
+	 * @param min
+	 * @param max
+	 * @return
+	 */
 	public ArrayList<Board> crossover(Board b2, int min, int max) {
 		ArrayList<Board> childs = new ArrayList<Board>();
 		
-		ArrayList<Integer> child1 = this.getRepresentation();
-		ArrayList<Integer> child2 = b2.getRepresentation();
+		ArrayList<Integer> child1 = new ArrayList<Integer>(this.getRepresentation());
+		ArrayList<Integer> child2 = new ArrayList<Integer>(b2.getRepresentation());
 		
-		ArrayList<Integer> sel1 = new ArrayList<Integer>(child2.subList(min, max));
-		ArrayList<Integer> sel2 = new ArrayList<Integer>(child1.subList(min, max));
+		ArrayList<Integer> sel1 = new ArrayList<Integer>(b2.getRepresentation().subList(min, max));
+		ArrayList<Integer> sel2 = new ArrayList<Integer>(this.getRepresentation().subList(min, max));
+		
+		//System.out.println(" child 1 = " + child1.toString() + " child2 = " + child2.toString());
 		
 		for (int i = min; i < max; i++) {
+			
+			//System.out.println(" min = " + min + " max = " + max);
+
 			child1.remove(min);
 			child2.remove(min);
+			
+			//System.out.println(" child 1 = " + child1.toString() + " child2 = " + child2.toString());
 		}
 		
 		for (int i = 0; i < child1.size(); i++) {
 			Integer ia = child1.get(i);
 			Integer ib =  find(ia, sel1, sel2);
+			
+			//System.out.println("ia = " + ia + " ib = " + ib);
+			
 			if (ia != ib) {
+				
+				//System.out.println("i = " + i + " child 1 = " + child1.toString() + " child2 = " + child2.toString());
+				
 				child1.set(i, ib);
 				child2.set(child2.indexOf(ib), ia);
+				
+				//System.out.println("i = " + i + " child 1 = " + child1.toString() + " child2 = " + child2.toString());
 			}
 		}
 		
 		child1.addAll(min, sel1);
 		child2.addAll(min, sel2);
+		
+		//System.out.println("220 child 1 = " + child1.toString() + " child2 = " + child2.toString());
+
 		
 		childs.add(new Board(this.N, this.magicSum, child1));
 		childs.add(new Board(this.N, this.magicSum, child2));
@@ -208,11 +230,29 @@ public class Board {
 		return childs;
 	}
 
+	/**
+	 * 
+	 * @param ia
+	 * @param sel1
+	 * @param sel2
+	 * @return
+	 */
 	private Integer find(Integer ia, ArrayList<Integer> sel1, ArrayList<Integer> sel2) {
 		int index = sel1.indexOf(ia);
 		if (index == -1)
-			return index;
+			return ia;
 		return find(sel2.get(index), sel1, sel2);
 	}
-	
+
+	/**
+	 * 
+	 */
+	public void mutation() {
+		int a  = (int) Math.ceil((N*N - 1) * random.nextDouble());
+		int b  = (int) Math.ceil((N*N - 1) * random.nextDouble());
+		
+		Collections.swap(board, a, b);
+		
+		this.fitness = computeFitness();		
+	}
 }
