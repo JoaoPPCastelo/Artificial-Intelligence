@@ -61,7 +61,7 @@ public class MagicSquare {
 	 * Para cada board, verificar se o fitness corresponde a 0 (board com solucao)
 	 * @return uma board caso senja encontrada solucao, null caso nao tenha sido encontrada solucao
 	 */
-	private Board findSolution() {
+	private Board findSolution(Queue<Board> boards) {
 		for (Board b : boards) {
 			if (b.getFitness() == 0) {
 				return b;
@@ -77,7 +77,7 @@ public class MagicSquare {
 	 */
 	public Board solve() {
 				
-			while (findSolution() == null) {
+			while (findSolution(boards) == null) {
 				
 				ArrayList<Board> childs = new ArrayList<Board>();
 							
@@ -87,13 +87,23 @@ public class MagicSquare {
 					Board b2 = boards.poll();
 					
 					// crossover
-					//if (Main.pCrossover >= random.nextDouble()) {
+					if (Main.pCrossover >= random.nextDouble()) {
 						childs.addAll(pmxCrossover(b1, b2));
-					//}
+					}
+					
+					PriorityQueue<Board> pq = new PriorityQueue<Board>(11, new BoardComparator());
+					pq.addAll(childs);
+					if (findSolution(pq) == null) {
+						for(Board b : childs) {
+							if (Main.pMutation >= random.nextDouble() ) {
+								b.mutation();
+							}
+						}
+					}
 				
 					// manter os pais
-					childs.add(b1);
-					childs.add(b2);
+					boards.add(b1);
+					boards.add(b2);
 				}
 				
 				
@@ -118,16 +128,16 @@ public class MagicSquare {
 				boards.addAll(temp);
 				//temp.clear();
 				
-				if (findSolution() != null)
+				if (findSolution(boards) != null)
 					break;
 				
-				for(Board b : boards) {
-					if (Main.pMutation >= random.nextDouble() ) {
-						b.mutation();
-					}
-				}
+//				for(Board b : boards) {
+//					if (Main.pMutation >= random.nextDouble() ) {
+//						b.mutation();
+//					}
+//				}
 			}
-			return findSolution();
+			return findSolution(boards);
 		}
 
 }

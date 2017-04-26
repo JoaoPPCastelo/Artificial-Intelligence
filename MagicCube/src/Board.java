@@ -20,6 +20,7 @@ public class Board {
 		this.magicSum = magicSum;
 		generateBoard();
 		this.fitness = computeFitness();
+		System.out.print(this.fitness + " ");
 	}
 	
 	/**
@@ -33,6 +34,8 @@ public class Board {
 		this.magicSum = magicSum;
 		this.board = board;
 		this.fitness = computeFitness();
+		System.out.print(this.fitness + " ");
+
 	}
 	
 	/**
@@ -248,10 +251,31 @@ public class Board {
 	 * 
 	 */
 	public void mutation() {
-		int a  = (int) Math.ceil((N*N - 1) * random.nextDouble());
-		int b  = (int) Math.ceil((N*N - 1) * random.nextDouble());
 		
-		Collections.swap(board, a, b);
+		if (this.fitness <= 2) {
+		
+			int a  = (int) Math.ceil((N*N - 1) * random.nextDouble());
+			int b  = (int) Math.ceil((N*N - 1) * random.nextDouble());
+			
+			Collections.swap(board, a, b);
+		}
+		
+		else {
+			int a  = (int) Math.ceil((N*N - 1) * random.nextDouble());
+			int b  = (int) Math.ceil((N*N - 1) * random.nextDouble());
+			
+			Collections.swap(board, a, b);
+			
+			a  = (int) Math.ceil((N*N - 1) * random.nextDouble());
+			b  = (int) Math.ceil((N*N - 1) * random.nextDouble());
+			
+			Collections.swap(board, a, b);
+			
+			a  = (int) Math.ceil((N*N - 1) * random.nextDouble());
+			b  = (int) Math.ceil((N*N - 1) * random.nextDouble());
+			
+			Collections.swap(board, a, b);
+		}
 		
 		this.fitness = computeFitness();		
 	}

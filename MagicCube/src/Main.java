@@ -6,7 +6,7 @@ public class Main {
 	// -----------------------------------------------------
 	
 	// tamanho inicial da board
-	private static int N = 4;
+	private static int N = 8;
 	
 	// tempo de execucao (minutos)
 	private static int TIME = 2;
@@ -30,7 +30,7 @@ public class Main {
 	public static double pMutation = 0.75;
 	
 	// probabilidade de ocorrer crossover
-	public static double pCrossover = 0.15;
+	public static double pCrossover = 1.0;
 	
 	
 	
