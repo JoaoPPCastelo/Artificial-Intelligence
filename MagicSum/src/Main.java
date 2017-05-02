@@ -6,7 +6,7 @@ public class Main {
 	// -----------------------------------------------------
 		
 	//tamanho inicial da board
-	private static int N = 5;
+	private static int N = 12;
 	
 	// probabilidade de ocorrer mutacao
 	public static double pMutation = 0.40;

@@ -53,15 +53,17 @@ public class Board {
 	 */
 	private void computeFitness() {
 		int _fitness = 0;
+		int rowSum = 0;
+		int colSum = 0;
 		
 		for (int i = 0; i < N; i++) {
-			_fitness += Math.abs(magicSum - getHorizontalSum(i));
+			rowSum += Math.abs(magicSum - getHorizontalSum(i));
+			// colunas
+			colSum += Math.abs(magicSum - getVerticalSum(i));
 		}
 		
-		// colunas
-		for (int i = 0; i < N; i++) {
-			_fitness += Math.abs(magicSum - getVerticalSum(i));
-		}
+		_fitness += rowSum;
+		_fitness += colSum;
 		
 		// diagonal /
 		_fitness += Math.abs(magicSum - getForwardDiagonalSum());
