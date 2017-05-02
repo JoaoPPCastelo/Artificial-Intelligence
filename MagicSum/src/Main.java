@@ -12,7 +12,7 @@ public class Main {
 	public static double pMutation = 0.40;
 	
 	// probabilidade de ocorrer crossover
-	public static double pCrossover = 0.33;
+	public static double pCrossover = 0.10;
 	
 	// numero de individuos com melhor fitness 
 	public static int ELITE = 2;
@@ -32,6 +32,11 @@ public class Main {
 		long startClock = System.nanoTime();
 		
 		while ((System.nanoTime() - startClock) < TIME * 60 * NANOSEC_PER_SEC) {
+			
+			if (N > 9) {
+				pMutation = 0.42;
+				pCrossover = 0.13;	
+			}
 			
 			// start the clock for elapsedTime
 			long startTime = System.nanoTime();

@@ -30,9 +30,7 @@ public class Board {
 	 * Imprimir uma board de tamanho N
 	 */
 	public void printBoard() {
-		
-		int line = 0;
-		
+				
 		for (int i = 1; i <= N*N; i++) {
 			System.out.print("\t" + board.get(i-1));
 			if (i % N == 0 && i != 0) {
@@ -56,7 +54,7 @@ public class Board {
 	private void computeFitness() {
 		int _fitness = 0;
 		
-		for (int i = 0; i < Math.sqrt(board.size()); i++) {
+		for (int i = 0; i < N; i++) {
 			_fitness += Math.abs(magicSum - getHorizontalSum(i));
 		}
 		
@@ -81,8 +79,9 @@ public class Board {
 	 */
 	private int getHorizontalSum(int line) {
 		int sum = 0;
+		int start = line*N;
 		int limit = line*N+N;
-		for (int i = line*N; i < limit; i++) {
+		for (int i = start; i < limit; i++) {
 			sum += board.get(i);
 		}
 		return sum;
@@ -207,6 +206,7 @@ public class Board {
 	 * @param b - valor a ser trocado com a
 	 */
 	public void mutation(int a, int b) {
+		
 		Collections.swap(board, a, b);
 		computeFitness();
 	}
