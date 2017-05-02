@@ -36,17 +36,17 @@ public class Board {
 		for (int i = 1; i <= N*N; i++) {
 			System.out.print("\t" + board.get(i-1));
 			if (i % N == 0 && i != 0) {
-				System.out.print("\t => " + getHorizontalSum(line++));
+				System.out.print("\t => " + magicSum);
 				System.out.println();
 			}
 		}
 		
-		System.out.print(getForwardDiagonalSum() + "\t");
+		System.out.print(magicSum + "\t");
 		
 		for (int i = 0; i < N; i++) 
-			System.out.print(getVerticalSum(i) + "\t");
+			System.out.print(magicSum + "\t");
 		
-		System.out.println(getBackDiagonalSum());
+		System.out.println(magicSum);
 	}
 	
 	/**
