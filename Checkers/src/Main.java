@@ -1,6 +1,5 @@
 import java.util.Scanner;
 
-
 /*
  * TODO
  *  - gerar board inicial - DONE
@@ -20,8 +19,8 @@ import java.util.Scanner;
 
 public class Main {
 	
-	private static void justPlay(Scanner sc, Board b, Positions pos) {
-		
+	private static void justPlay(Scanner sc, Board b, Positions pos) 
+	{
 		b.printBoard();
 		
 		System.out.print("A sua jogada: ");
@@ -36,9 +35,9 @@ public class Main {
 		b.play(actPos, nxtPos);
 	}
 
-	public static void main(String[] args) {
-		
-		System.out.println("Bem-vindo a este divertidíssimo jogo de DAMAS!! Pronto para jogar??");
+	public static void main(String[] args) 
+	{	
+		System.out.println("Bem-vindo a este divertidíssimo jogo de DAMAS! Pronto para jogar?");
 		System.out.println("Para realizar um movimento introduza a posição atual e a posição de destino. Ex: A2 B1");
 		
 		Scanner sc = new Scanner(System.in);
@@ -46,16 +45,12 @@ public class Main {
 		Positions pos = new Positions();
 			
 		while(!b.gameOver()) {
-			
 			justPlay(sc, b, pos);
-						
 		}
 		
 		if (b.gameOver()) {
-			System.out.println("Ops. Parece que terminou... Diveriu-se??");
+			System.out.println("Ops. Parece que terminou... Divertiu-se?");
 			sc.close();
 		}
-		
 	}
-
 }
