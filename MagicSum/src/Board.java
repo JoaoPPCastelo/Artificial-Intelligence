@@ -57,6 +57,7 @@ public class Board {
 		int colSum = 0;
 		
 		for (int i = 0; i < N; i++) {
+			// linhas
 			rowSum += Math.abs(magicSum - getHorizontalSum(i));
 			// colunas
 			colSum += Math.abs(magicSum - getVerticalSum(i));
@@ -97,7 +98,7 @@ public class Board {
 	private int getVerticalSum(int collumn) {
 		int sum = 0;
 		int limit = N*N;
-		for (int i = collumn; i < limit; i += N) {
+		for (int i = collumn; i < limit; i+=N) {
 			sum += board.get(i);
 		}
 		return sum;
@@ -110,7 +111,7 @@ public class Board {
 	private int getBackDiagonalSum() {
 		int sum = 0;
 		int limit = N*N;
-		for (int i = 0; i < limit; i += N+1) {
+		for (int i = 0; i < limit; i+=N+1) {
 			sum += board.get(i);
 		}
 		return sum;
@@ -208,7 +209,6 @@ public class Board {
 	 * @param b - valor a ser trocado com a
 	 */
 	public void mutation(int a, int b) {
-		
 		Collections.swap(board, a, b);
 		computeFitness();
 	}

@@ -1,11 +1,13 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.SplittableRandom;
 
 public class Population {
 	private int boardLength;
-	private Random generator;
 	private int populationSize;
-	private ArrayList<Board> population =new ArrayList<Board>();
+	private SplittableRandom generator;
 	BoardFitComparator comparator = new BoardFitComparator();
+	private ArrayList<Board> population =new ArrayList<Board>();
 	
 	/**
 	 * Construtor para uma nova populacao
@@ -13,7 +15,7 @@ public class Population {
 	 * @param boardLength - numero de elementos que compoem uma board
 	 */
 	public Population (int populationSize, int boardLength) {
-		generator = new Random();
+		generator = new SplittableRandom();
 		this.boardLength = boardLength;
 		this.populationSize = populationSize;
 		generateBoards();
@@ -24,13 +26,13 @@ public class Population {
 	 * Gerar populationSize diferentes boards de forma aleatoria
 	 */
 	private void generateBoards() {
-		ArrayList<Integer> temp =new ArrayList<Integer>();
+		ArrayList<Integer> temp = new ArrayList<Integer>();
 		
 		for(int i = 1; i < boardLength+1; i++)
 			temp.add(i);
 		
 		for(int i = 0; i < populationSize; i++){
-			Collections.shuffle(temp,generator);
+			Collections.shuffle(temp);
 			population.add(new Board(new ArrayList<Integer>(temp)));
 		}
 		
@@ -42,8 +44,8 @@ public class Population {
 	 */
 	public void PMX_crossover(int index) {
 		
-		int a = (int) Math.ceil((boardLength-1)*generator.nextDouble());
-		int b = (int) Math.ceil((boardLength-1)*generator.nextDouble());
+		int a = (int) ((boardLength-1)*generator.nextDouble());
+		int b = (int) ((boardLength-1)*generator.nextDouble());
 		
 		Board b1 = population.get(index-1);
 		Board b2 = population.get(index);
@@ -62,8 +64,8 @@ public class Population {
 		
 		Board board = population.get(index).copy();
 		
-		int a = (int) Math.floor((boardLength)*generator.nextDouble());
-		int b = (int) Math.floor((boardLength)*generator.nextDouble());
+		int a = (int) ((boardLength)*generator.nextDouble());
+		int b = (int) ((boardLength)*generator.nextDouble());
 		
 		board.mutation(a, b);
 		
@@ -88,7 +90,6 @@ public class Population {
 				temp.add(Collections.max(permut.subList(j, j+elite), comparator));
 		}
 		population = new ArrayList<Board>(temp);
-		temp.clear();		
 	}
 	
 	/**

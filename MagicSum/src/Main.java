@@ -6,7 +6,7 @@ public class Main {
 	// -----------------------------------------------------
 		
 	//tamanho inicial da board
-	private static int N = 12;
+	private static int N = 5;
 	
 	// probabilidade de ocorrer mutacao
 	public static double pMutation = 0.40;
@@ -27,7 +27,7 @@ public class Main {
 	// -------------------     MAIN     --------------------
 	// -----------------------------------------------------
 	public static void main(String[] args){
-		
+					
 		// run the program for approximately TIME minutes
 		long startClock = System.nanoTime();
 		
@@ -56,10 +56,15 @@ public class Main {
 			// compute and print the elapsedTime
 			long elapsedTime = System.nanoTime() - startTime;
 			double seconds = (double)elapsedTime / 1000000000.0;
-			System.out.println("elapsed time: " + seconds + " seconds. Magic square of size " + N + ":");
+			
+			
+			long TotalelapsedTime = System.nanoTime() - startClock;
+			double Totalseconds = (double)TotalelapsedTime / 1000000000.0;
+			
+			System.out.println("elapsed time: " + seconds + " seconds. " + " Total time = " + Totalseconds + " Magic square of size " + N + ":");
 			
 			// print the board
-			b.printBoard();
+			//b.printBoard();
 			
 			// increment the board size
 			N++;
