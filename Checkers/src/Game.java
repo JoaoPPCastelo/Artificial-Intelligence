@@ -42,6 +42,8 @@ public class Game {
 				Integer nxtPos = pos.getPosition(nextPosition);
 				
 				b.move(actPos, nxtPos);
+				
+				isUserPlaying = !isUserPlaying;
 			}
 			
 			// AI playing
@@ -52,7 +54,10 @@ public class Game {
 				
 				// TODO mostrar a jogada da AI
 				System.out.println("A jogada do computador: ");
-							
+						
+				
+				isUserPlaying = !isUserPlaying;
+
 			}
 			
 		}

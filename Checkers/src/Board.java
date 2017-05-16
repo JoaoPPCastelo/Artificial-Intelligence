@@ -513,4 +513,52 @@ public class Board
 		return ((!board.contains(BLACKPIECE) && !board.contains(BLACKPIECE.toUpperCase())) 
 				|| (!board.contains(WHITEPIECE) && !board.contains(WHITEPIECE.toUpperCase())));
 	}
+
+	public double getWhiteDamas() {
+
+		int count = 0;
+		
+		for (String s : board) {
+			if (s == WHITEPIECE.toUpperCase())
+				count++;
+		}
+		
+		return count;
+	}
+
+	public double getWhitePieces() {
+		
+		int count = 0;
+		
+		for (String s : board) {
+			if (s == WHITEPIECE)
+				count++;
+		}
+		
+		return count;
+	}
+
+	public double getBlackDamas() {
+		
+		int count = 0;
+		
+		for (String s : board) {
+			if (s == BLACKPIECE.toUpperCase())
+				count++;
+		}
+		
+		return count;
+	}
+
+	public double getBlackPieces() {
+		
+		int count = 0;
+		
+		for (String s : board) {
+			if (s == BLACKPIECE)
+				count++;
+		}
+		
+		return count;
+	}
 }

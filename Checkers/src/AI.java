@@ -74,5 +74,60 @@ public class AI {
 		return possibleMovements.get(random.nextInt(possibleMovements.size()));
 	}
 
+	/**
+	 * 
+	 * @param b
+	 * @param i
+	 * @param alpha
+	 * @param beta
+	 * @param player
+	 * @return
+	 */
+	private Double minimax(Board b, int depth, double alpha, double beta, boolean player) {
+		
+		if(depth == 0) 
+			return getScore(b, player);
+		
+		ArrayList<String> possibleMovements = b.allValidMovements();
+		
+		Board bTemp = null;
+		
+		double max = Double.POSITIVE_INFINITY;
+		
+		for (int i = 0; i < possibleMovements.size(); i++) {
+			bTemp = new Board(b.getBoardRepresentation());
+			
+			String[] index = possibleMovements.get(i).split(" ");
+			
+			bTemp.move(Integer.getInteger(index[0]), Integer.getInteger(index[1]));
+			
+			double result = minimax(bTemp, depth - 1, alpha, beta, !player);
+			
+			max = Math.max(result, max);
+			alpha = Math.min(alpha, max);
+			
+			if (alpha >= beta)
+				break;	
+		}
+		return max;
+	}
+
+	/**
+	 * 
+	 * @param b
+	 * @param player
+	 * @return
+	 */
+	private Double getScore(Board b, boolean player) {
+
+		double dama = 2.0;
+		
+		if (player)
+			return b.getWhiteDamas() * dama + b.getWhitePieces() - b.getBlackDamas() * dama - b.getBlackPieces(); 
+		else
+			return b.getBlackDamas() * dama + b.getBlackDamas() - b.getWhiteDamas() * dama - b.getWhitePieces(); 
+		
+	}
+
 	// TODO lista com moves possiveis
 }

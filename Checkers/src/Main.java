@@ -9,11 +9,12 @@
  *  - realizar movimentos - DONE
  *  - promover pecas a damas - DONE
  *  - comer pecas - DONE
- *  - criar classe/metodo play - TODO
+ *  - criar classe/metodo play - DONE -> Game.java
  *  - implementar AI - TODO
  *  - human player joga com uma cor definida BRANCAS!!!. - criar variavel de controlo DONE
  *  - ver quem ganha e quem perde - TODO
  *  - simplificar o metodo eat - TODO - talvez retornar a peca a comer no validateMovements
+ *  controlar minmax de jogadores sem influenciar turns - TODO
  */
 
 public class Main {
