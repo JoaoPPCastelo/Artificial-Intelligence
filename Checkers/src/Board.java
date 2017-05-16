@@ -14,6 +14,14 @@ public class Board
 		board = new ArrayList<String>(64);
 		initializeBoard();
 	}
+	
+	public Board(ArrayList<String> al) {
+		board.addAll(al);
+	}
+	
+	public ArrayList<String> getBoardRepresentation() {
+		return board;
+	}
 
 	/**
 	 * Inicializa a board com as pecas nas posicoes iniciais. Todos os espacos
@@ -69,6 +77,11 @@ public class Board
 		System.out.println("\n");
 	}
 
+	/**
+	 * Move uma peca da posicao actPos para a posicao nxtPos
+	 * @param actPos - posicao atual da peca
+	 * @param nxtPos - nova posicao da peca
+	 */
 	private void swap(Integer actPos, Integer nxtPos) {
 		String tmp = board.get(actPos);
 		board.set(nxtPos.intValue(), tmp);
@@ -84,12 +97,14 @@ public class Board
 	 * @param actPos - posicao atual da peca
 	 * @param nxtPos - posicao para onde se quer mover a peca
 	 */
-	public void play(Integer actPos, Integer nxtPos) 
+	public void move(Integer actPos, Integer nxtPos) 
 	{
 		if (validateMovements(actPos, nxtPos)) {
 			eat(actPos, nxtPos);
 			swap(actPos, nxtPos);
-			promotion();
+			// nao interessa promover quando as pecas estao no meio da board
+			if (nxtPos < 8 || nxtPos > 55)
+				promotion();
 		}
 		else
 			System.out.println("Movimento inválido.");
@@ -97,12 +112,14 @@ public class Board
 
 	/**
 	 * Verifica que os movimentos pretendidos para as pecas pretas e brancas sao validos
-	 * @param actPos
-	 * @param nxtPos
+	 * @param actPos - posicao atual da peca
+	 * @param nxtPos - posicao para onde se quer mover a peca
 	 * @return
 	 */
 	private boolean validateMovements(Integer actPos, Integer nxtPos) {
-		return validateWhiteMovements(actPos, nxtPos) || validateBlackMovements(actPos, nxtPos); // CONFIRMAR QUE ESTA CORRETO - o OR - TODO
+		
+		return (Game.isUserPlaying) ? validateWhiteMovements(actPos, nxtPos) : validateBlackMovements(actPos, nxtPos);
+
 	}
 
 	/**
@@ -407,6 +424,87 @@ public class Board
 			}
 		}
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public ArrayList<String> allValidMovements() {
+		
+		ArrayList<String> possibleMovent = new ArrayList<String>();
+		
+		for(int i = 0; i < 8; i++) {
+			for (int j = 0; i < 8; j++) {
+				if ((board.get(j*7 + i) == WHITEPIECE || board.get(j*7 + i) == WHITEPIECE.toUpperCase())  && Game.isUserPlaying)
+					possibleMovent.addAll(validMovements(j*7 + i));
+			}
+		}
+		return possibleMovent;
+	}
+	
+	
+	/**
+	 * 
+	 * @param index
+	 * @return
+	 */
+	public ArrayList<String> validMovements(int index) {
+		
+		ArrayList<String> movements = new ArrayList<String>();
+		
+		if (board.get(index) == WHITEPIECE || board.get(index) == BLACKPIECE) {
+			
+			int newRow = (int) Math.floor(index/7) + board.get(index) == BLACKPIECE ? 1 : -1;
+			
+			if (newRow >= 0 || newRow < 8) {
+				int newCol = (index%8) + 1;
+				
+				if (newCol < 8 || board.get(newRow*7 + newCol) == BLANK) {
+					movements.add(index + " " + (newRow*7 + newCol));
+				}
+				
+				newCol -= 2;
+				if (newCol < 8 || board.get(newRow*7 + newCol) == BLANK) {
+					movements.add(index + " " + (newRow*7 + newCol));
+				}	
+			}
+		}
+		
+		else {
+			int newRow = (int) (Math.floor(index/7) + 1);
+			if (newRow < 8) {
+				
+				int newCol = (index%8) + 1;
+				
+				if (newCol < 8 || board.get(newRow*7 + newCol) == BLANK) {
+					movements.add(index + " " + (newRow*7 + newCol));
+				}
+				
+				newCol -= 2;
+				if (newCol < 8 || board.get(newRow*7 + newCol) == BLANK) {
+					movements.add(index + " " + (newRow*7 + newCol));
+				}		
+			}
+			newRow -= 2;
+			if (newRow > 0) {
+				
+				int newCol = (index%8) + 1;
+				
+				if (newCol < 8 || board.get(newRow*7 + newCol) == BLANK) {
+					movements.add(index + " " + (newRow*7 + newCol));
+				}
+				
+				newCol -= 2;
+				if (newCol < 8 || board.get(newRow*7 + newCol) == BLANK) {
+					movements.add(index + " " + (newRow*7 + newCol));
+				}		
+			}
+			// porcaria dos skips????????
+		}
+		return movements;
+	}
+	
+	
 	
 	/**
 	 * Verifica quando nao existem pecas de uma determinada cor. Caso aconteca, o jogo termina
