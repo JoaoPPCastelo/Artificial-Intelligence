@@ -14,7 +14,8 @@
  *  - human player joga com uma cor definida BRANCAS!!!. - criar variavel de controlo DONE
  *  - ver quem ganha e quem perde - TODO
  *  - simplificar o metodo eat - TODO - talvez retornar a peca a comer no validateMovements
- *  controlar minmax de jogadores sem influenciar turns - TODO
+ *  controlar minmax de jogadores sem influenciar turns - DONE?
+ *  TODO na AI damas podem andar mais do que uma casa
  */
 
 public class Main {

@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 public class AI {
@@ -13,15 +12,15 @@ public class AI {
 	
 	public String makeMovement(Board b, Positions pos) {
 				
-		// TODO escolher um mov
+		// escolher um mov
 		String mov = minimaxStart(b, depth);
 		
-		String[] movs = mov.split(" ");
-		Integer actPos = Integer.getInteger(movs[0]);
-		Integer nxtPos = Integer.getInteger(movs[1]);
+		//System.out.println("make mov = " + mov);
 		
-		// DONE efetuar mov
-		b.move(actPos, nxtPos);	
+		String[] movs = mov.split(" ");
+		
+		// efetuar mov
+		b.move(Integer.parseInt(movs[0]), Integer.parseInt(movs[1]));	
 		
 		return mov;
 	}
@@ -33,7 +32,6 @@ public class AI {
 	 * @return
 	 */
 	private String minimaxStart(Board b, int depth) {
-		// TODO Auto-generated method stub
 		
 		boolean player = Game.isUserPlaying;
 		
@@ -42,7 +40,7 @@ public class AI {
 		
 		ArrayList<String> possibleMovements;
 		
-		possibleMovements = b.allValidMovements();
+		possibleMovements = b.allValidMovements(player);
 		
 		// skiping point????
 		
@@ -53,10 +51,13 @@ public class AI {
 		
 		Board bTemp = null;
 		for (String s : possibleMovements) {
-			bTemp = new Board(b.getBoardRepresentation());
-			String[] index = s.split(" ");
-			bTemp.move(Integer.getInteger(index[0]), Integer.getInteger(index[1]));
-			scores.add(minimax(bTemp, depth-1, alpha, beta, !player));
+			if (s != null) {
+				bTemp = new Board(b.getBoardRepresentation());
+				String[] index = s.split(" ");
+								
+				bTemp.move(Integer.parseInt(index[0]), Integer.parseInt(index[1]));
+				scores.add(minimax(bTemp, depth-1, alpha, beta, !player));
+			}
 		}
 				
 		double maxScore = Collections.max(scores);
@@ -70,6 +71,9 @@ public class AI {
 		}
 			
 		Random random = new Random();
+		
+		for (String s : possibleMovements)
+			System.out.println(s);
 		
 		return possibleMovements.get(random.nextInt(possibleMovements.size()));
 	}
@@ -88,28 +92,52 @@ public class AI {
 		if(depth == 0) 
 			return getScore(b, player);
 		
-		ArrayList<String> possibleMovements = b.allValidMovements();
+		ArrayList<String> possibleMovements = b.allValidMovements(player);
 		
 		Board bTemp = null;
 		
-		double max = Double.POSITIVE_INFINITY;
+		double value;
 		
-		for (int i = 0; i < possibleMovements.size(); i++) {
-			bTemp = new Board(b.getBoardRepresentation());
+		if (player) {
+			value  = Double.NEGATIVE_INFINITY;
 			
-			String[] index = possibleMovements.get(i).split(" ");
-			
-			bTemp.move(Integer.getInteger(index[0]), Integer.getInteger(index[1]));
-			
-			double result = minimax(bTemp, depth - 1, alpha, beta, !player);
-			
-			max = Math.max(result, max);
-			alpha = Math.min(alpha, max);
-			
-			if (alpha >= beta)
-				break;	
+			for (int i = 0; i < possibleMovements.size(); i++) {
+				
+				bTemp = new Board(b.getBoardRepresentation());
+				
+				String[] index = possibleMovements.get(i).split(" ");
+				
+				bTemp.move(Integer.parseInt(index[0]), Integer.parseInt(index[1]));
+				
+				double result = minimax(bTemp, depth - 1, alpha, beta, !player);
+				
+				value = Math.max(result, value);
+				alpha = Math.min(alpha, value);
+				
+				if (alpha >= beta)
+					break;	
+			}
 		}
-		return max;
+		else {
+			value = Double.POSITIVE_INFINITY;
+			
+			for (int i = 0; i < possibleMovements.size(); i++) {
+				bTemp = new Board(b.getBoardRepresentation());
+				
+				String[] index = possibleMovements.get(i).split(" ");
+				
+				bTemp.move(Integer.parseInt(index[0]), Integer.parseInt(index[1]));
+				
+				double result = minimax(bTemp, depth - 1, alpha, beta, !player);
+				
+				value = Math.max(result, value);
+				alpha = Math.min(alpha, value);
+				
+				if (alpha >= beta)
+					break;	
+			}
+		}
+		return value;
 	}
 
 	/**
@@ -120,7 +148,7 @@ public class AI {
 	 */
 	private Double getScore(Board b, boolean player) {
 
-		double dama = 2.0;
+		double dama = 1.2;
 		
 		if (player)
 			return b.getWhiteDamas() * dama + b.getWhitePieces() - b.getBlackDamas() * dama - b.getBlackPieces(); 
@@ -129,5 +157,4 @@ public class AI {
 		
 	}
 
-	// TODO lista com moves possiveis
 }

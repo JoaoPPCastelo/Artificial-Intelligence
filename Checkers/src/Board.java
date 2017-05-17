@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Board 
 {
@@ -16,6 +17,7 @@ public class Board
 	}
 	
 	public Board(ArrayList<String> al) {
+		board = new ArrayList<String>(64);
 		board.addAll(al);
 	}
 	
@@ -97,8 +99,11 @@ public class Board
 	 * @param actPos - posicao atual da peca
 	 * @param nxtPos - posicao para onde se quer mover a peca
 	 */
-	public void move(Integer actPos, Integer nxtPos) 
+	public int move(Integer actPos, Integer nxtPos) 
 	{
+		
+		//System.out.println("move = " + actPos + " " + nxtPos);
+		
 		if (validateMovements(actPos, nxtPos)) {
 			eat(actPos, nxtPos);
 			swap(actPos, nxtPos);
@@ -107,7 +112,11 @@ public class Board
 				promotion();
 		}
 		else
-			System.out.println("Movimento inválido.");
+			if (Game.isUserPlaying) {
+				System.out.println("Movimento inválido.");
+				return 1;
+			}
+		return 0;
 	}
 
 	/**
@@ -118,7 +127,15 @@ public class Board
 	 */
 	private boolean validateMovements(Integer actPos, Integer nxtPos) {
 		
-		return (Game.isUserPlaying) ? validateWhiteMovements(actPos, nxtPos) : validateBlackMovements(actPos, nxtPos);
+		//System.out.println(Game.isUserPlaying);
+		
+		// return (Game.isUserPlaying) ? validateWhiteMovements(actPos, nxtPos) : validateBlackMovements(actPos, nxtPos);
+		
+		if (Game.isUserPlaying)
+			return validateWhiteMovements(actPos, nxtPos);
+		
+		else
+			return validateBlackMovements(actPos, nxtPos);
 
 	}
 
@@ -257,7 +274,7 @@ public class Board
 	 * @return true se o movimento respeita as regras do jogo, false caso contrario
 	 */
 	private boolean validateBlackMovements(int index, int newIndex) {
-	
+			
 		boolean isValid = false;
 	
 		// pecas simples. apenas se movem uma casa
@@ -429,14 +446,17 @@ public class Board
 	 * 
 	 * @return
 	 */
-	public ArrayList<String> allValidMovements() {
+	public ArrayList<String> allValidMovements(boolean player) {
+		
+		String color = player ? WHITEPIECE : BLACKPIECE;
 		
 		ArrayList<String> possibleMovent = new ArrayList<String>();
-		
-		for(int i = 0; i < 8; i++) {
-			for (int j = 0; i < 8; j++) {
-				if ((board.get(j*7 + i) == WHITEPIECE || board.get(j*7 + i) == WHITEPIECE.toUpperCase())  && Game.isUserPlaying)
-					possibleMovent.addAll(validMovements(j*7 + i));
+		// linhas
+		for(int j = 0; j < 8; j++) {
+			// colunas
+			for (int i = 0; i < 8; i++) {
+				if (board.get(j*8 + i) == color || board.get(j*8 + i) == color.toUpperCase())
+					possibleMovent.addAll(validMovements(j*8 + i, player));
 			}
 		}
 		return possibleMovent;
@@ -446,66 +466,151 @@ public class Board
 	/**
 	 * 
 	 * @param index
+	 * @param player 
 	 * @return
 	 */
-	public ArrayList<String> validMovements(int index) {
+	public ArrayList<String> validMovements(int index, boolean player) {
 		
 		ArrayList<String> movements = new ArrayList<String>();
 		
 		if (board.get(index) == WHITEPIECE || board.get(index) == BLACKPIECE) {
 			
-			int newRow = (int) Math.floor(index/7) + board.get(index) == BLACKPIECE ? 1 : -1;
+			int temp = board.get(index) == BLACKPIECE ? 1 : -1;
+			int newRow = (int) Math.floor(index/8) + temp;
 			
 			if (newRow >= 0 || newRow < 8) {
 				int newCol = (index%8) + 1;
 				
-				if (newCol < 8 || board.get(newRow*7 + newCol) == BLANK) {
-					movements.add(index + " " + (newRow*7 + newCol));
+				if (newCol < 8 && board.get(newRow*8 + newCol) == BLANK) {
+					movements.add(index + " " + (newRow*8 + newCol));
 				}
 				
-				newCol -= 2;
-				if (newCol < 8 || board.get(newRow*7 + newCol) == BLANK) {
-					movements.add(index + " " + (newRow*7 + newCol));
+				newCol = (index%8) - 1;
+				if (newCol >= 0 && board.get(newRow*8 + newCol) == BLANK) {
+					movements.add(index + " " + (newRow*8 + newCol));
 				}	
 			}
 		}
 		
+		// se for dama
 		else {
-			int newRow = (int) (Math.floor(index/7) + 1);
+			
+			// TODO damas podem andar mais de uma casa
+			int newRow = (int) (Math.floor(index/8) + 1);
+						
 			if (newRow < 8) {
 				
 				int newCol = (index%8) + 1;
 				
-				if (newCol < 8 || board.get(newRow*7 + newCol) == BLANK) {
-					movements.add(index + " " + (newRow*7 + newCol));
+				if (newCol < 8 && board.get(newRow*8 + newCol) == BLANK) {
+					movements.add(index + " " + (newRow*8 + newCol));
 				}
 				
-				newCol -= 2;
-				if (newCol < 8 || board.get(newRow*7 + newCol) == BLANK) {
-					movements.add(index + " " + (newRow*7 + newCol));
+				newCol = (index%8) - 1;
+				if (newCol >= 0 && board.get(newRow*8 + newCol) == BLANK) {
+					movements.add(index + " " + (newRow*8 + newCol));
 				}		
 			}
 			newRow -= 2;
-			if (newRow > 0) {
+			if (newRow >= 0) {
 				
 				int newCol = (index%8) + 1;
 				
-				if (newCol < 8 || board.get(newRow*7 + newCol) == BLANK) {
-					movements.add(index + " " + (newRow*7 + newCol));
+				if (newCol < 8 && board.get(newRow*8 + newCol) == BLANK) {
+					movements.add(index + " " + (newRow*8 + newCol));
 				}
 				
-				newCol -= 2;
-				if (newCol < 8 || board.get(newRow*7 + newCol) == BLANK) {
-					movements.add(index + " " + (newRow*7 + newCol));
+				newCol = (index%8) - 1;
+				if (newCol >= 0 && board.get(newRow*8 + newCol) == BLANK) {
+					movements.add(index + " " + (newRow*8 + newCol));
 				}		
 			}
-			// porcaria dos skips????????
+		}
+		movements.addAll(getValidSkipMovements(index, player));
+		return movements;
+	}
+
+	/**
+	 * 
+	 * @param index
+	 * @param player 
+	 * @return
+	 */
+	private ArrayList<String> getValidSkipMovements(int index, boolean player) {
+		
+		ArrayList<String> movements = new ArrayList<String>();
+		ArrayList<Integer> possibilities = new ArrayList<Integer>();
+		
+		int row = (int) Math.floor(index/8);
+		int col = index%8;
+		
+		//System.out.println("index = " + index + " player = " + player);
+		
+		if (player && board.get(index) == WHITEPIECE) {		
+			//System.out.println("hello1");
+			possibilities.add(fromPoint2Index(row-2, col+2));
+			possibilities.add(fromPoint2Index(row-2, col-2));
+		} 
+		else if (!player && board.get(index) == BLACKPIECE) {
+			//System.out.println("hello2");
+			possibilities.add(fromPoint2Index(row+2, col+2));
+			possibilities.add(fromPoint2Index(row+2, col-2));
+
+		}
+		else if (board.get(index) == WHITEPIECE.toUpperCase() || board.get(index) == BLACKPIECE.toUpperCase()) {
+			//System.out.println("hello3");
+
+			possibilities.add(fromPoint2Index(row+2, col+2));
+			possibilities.add(fromPoint2Index(row+2, col-2));
+			possibilities.add(fromPoint2Index(row-2, col+2));
+			possibilities.add(fromPoint2Index(row-2, col-2));
+		}
+		
+		for (int i = 0; i < possibilities.size(); i++) {
+			Integer pos = possibilities.get(i);
+			
+			if(pos > 0 && pos < 64 && board.get(pos) == BLANK && isOpponent(player, midleIndex(index, pos)))
+				movements.add(index + " " + pos);			
 		}
 		return movements;
 	}
 	
+	/**
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	private int midleIndex(int start, int end) {
+		
+		int startCol = start%8;
+		int startRow = start/8;
+		
+		int endCol = end%8;
+		int endRow = end/8;
+				
+		return fromPoint2Index((startRow + endRow)/2, (startCol + endCol)/2);	
+	}
 	
+	/**
+	 * 
+	 * @param player
+	 * @param index
+	 * @return
+	 */
+	private boolean isOpponent(boolean player, int index) {
+		if (!player && (board.get(index) == WHITEPIECE || board.get(index) == WHITEPIECE.toUpperCase()))
+				return true;
+		if (player && (board.get(index) == BLACKPIECE || board.get(index) == BLACKPIECE.toUpperCase()))
+			return true;
+		return false;
+		
+	}
 	
+	private int fromPoint2Index (int row, int col) {
+		return (row)*8+ (col);
+	}
+
 	/**
 	 * Verifica quando nao existem pecas de uma determinada cor. Caso aconteca, o jogo termina
 	 */
