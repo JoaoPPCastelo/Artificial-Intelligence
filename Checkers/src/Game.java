@@ -24,17 +24,15 @@ public class Game {
 	/**
 	 * 	
 	 */
-	public static void play() {
-		
+	public static void play() 
+	{
 		// ate game over ou ate o user terminar o programa - DONE
 		while(true && !isGameOver()) {
-			
 			// imprime a board
 			b.printBoard();
 			
 			// se for o jogador a jogar
 			if (isUserPlaying) {
-				
 				System.out.print("A sua jogada: ");
 				
 				String[] input = sc.nextLine().split(" ");
@@ -49,12 +47,9 @@ public class Game {
 				
 				if (result == 0)
 					isUserPlaying = !isUserPlaying;
-				
 			}
-			
 			// AI playing
 			else {
-				
 				// DONE escolher jogada e retornar string com posicao inicial e final e faz o movimento
 				String mov = ai.makeMovement(b, pos);
 				
@@ -71,7 +66,7 @@ public class Game {
 		}
 	}
 		
-		public static boolean isGameOver() {
-			return b.gameOver();
-		}
+	public static boolean isGameOver() {
+		return b.gameOver();
+	}
 }

@@ -146,15 +146,14 @@ public class AI {
 	 * @param player
 	 * @return
 	 */
-	private Double getScore(Board b, boolean player) {
-
+	private Double getScore(Board b, boolean player) 
+	{
 		double dama = 1.2;
 		
 		if (player)
 			return b.getWhiteDamas() * dama + b.getWhitePieces() - b.getBlackDamas() * dama - b.getBlackPieces(); 
 		else
 			return b.getBlackDamas() * dama + b.getBlackDamas() - b.getWhiteDamas() * dama - b.getWhitePieces(); 
-		
 	}
 
 }

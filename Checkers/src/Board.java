@@ -5,6 +5,7 @@ public class Board
 {
 	private ArrayList<String> board;
 	private String BLACKPIECE = "b";
+//	private String WHITEPIECE = Character.toString((char)55.296);
 	private String WHITEPIECE = "w";
 	private String BLANK = " ";
 	
@@ -121,18 +122,15 @@ public class Board
 	 * @param nxtPos - posicao para onde se quer mover a peca
 	 * @return
 	 */
-	private boolean validateMovements(Integer actPos, Integer nxtPos) {
-		
+	private boolean validateMovements(Integer actPos, Integer nxtPos) 
+	{	
 		//System.out.println(Game.isUserPlaying);
-		
 		// return (Game.isUserPlaying) ? validateWhiteMovements(actPos, nxtPos) : validateBlackMovements(actPos, nxtPos);
 		
 		if (Game.isUserPlaying)
 			return validateWhiteMovements(actPos, nxtPos);
-		
 		else
 			return validateBlackMovements(actPos, nxtPos);
-
 	}
 
 	/**
@@ -141,83 +139,50 @@ public class Board
 	 * @param newIndex - indice para onde se quer mover a peca
 	 * @return true se o movimento respeita as regras do jogo, false caso contrario
 	 */
-	private boolean validateWhiteMovements(int index, int newIndex) {
+	private boolean validateWhiteMovements(int index, int newIndex) 
+	{
 		boolean isValid = false;
+		String piece = board.get(index);
+		String newPiece = board.get(newIndex);
 
 		// pecas simples. apenas se movem uma casa
-		if (board.get(index) == WHITEPIECE) 
-		{
+		if (piece == WHITEPIECE && newPiece == BLANK) {
 			// as pecas da esquerda apenas se podem mover para a direita
 			if (index % 8 == 0) {
 				// pecas brancas so podem subir V
-				if (newIndex == index - 7 && board.get(newIndex) == BLANK && board.get(index) == WHITEPIECE)
+				if (newIndex == index - 7)
 					isValid = true;
+				
 				// pecas brancas que comem V
-				else if (
-					(newIndex == index - 14 
-					&& board.get(newIndex) == BLANK 
-					&& board.get(index - 7) == BLACKPIECE 
-					&& board.get(index) == WHITEPIECE
-					)
-					|| (newIndex == index + 18 
-					&& board.get(newIndex) == BLANK 
-					&& board.get(index + 9) == BLACKPIECE 
-					&& board.get(index) == WHITEPIECE
-					)
-				) {
+				else if ((newIndex == index - 14 && board.get(index - 7) == BLACKPIECE)
+						|| (newIndex == index + 18 && board.get(index + 9) == BLACKPIECE)) {
 					isValid = true;					
 				}
 			}
 			// as pecas da direita apenas se podem mover para a esqureda
 			else if (index % 8 == 7) {
 				// brancas sobem V
-				if (newIndex == index - 9 && board.get(newIndex) == BLANK && board.get(index) == WHITEPIECE)
+				if (newIndex == index - 9)
 					isValid = true;
 			
 				// pecas brancas que comem V
-				else if (
-					(newIndex == index - 18 
-					&& board.get(newIndex) == BLANK 
-					&& board.get(index - 9) == BLACKPIECE 
-					&& board.get(index) == WHITEPIECE
-					)
-					|| (newIndex == index + 14 
-					&& board.get(newIndex) == BLANK 
-					&& board.get(index + 7) == BLACKPIECE 
-					&& board.get(index) == WHITEPIECE
-					)
-				) {
+				else if ((newIndex == index - 18 && board.get(index - 9) == BLACKPIECE)
+						|| (newIndex == index + 14 && board.get(index + 7) == BLACKPIECE)) {
 					isValid = true;					
 				}
 			}
 			// pecas no meio da board
 			else {
 				// brancas sobem V
-				if ((newIndex == index - 7 || newIndex == index - 9) && board.get(newIndex) == BLANK && board.get(index) == WHITEPIECE)
+				if ((newIndex == index - 7 || newIndex == index - 9))
 					isValid = true;
 			
 				// brancas que comem V
 				else if (
-					(newIndex == index - 14 
-					&& board.get(newIndex) == BLANK 
-					&& board.get(index - 7) == BLACKPIECE 
-					&& board.get(index) == WHITEPIECE
-					)
-					|| (newIndex == index - 18 
-					&& board.get(newIndex) == BLANK 
-					&& board.get(index - 9) == BLACKPIECE 
-					&& board.get(index) == WHITEPIECE
-					)
-					|| (newIndex == index + 14 
-					&& board.get(newIndex) == BLANK 
-					&& board.get(index + 7) == BLACKPIECE 
-					&& board.get(index) == WHITEPIECE
-					)
-					|| (newIndex == index + 18 
-					&& board.get(newIndex) == BLANK 
-					&& board.get(index + 9) == BLACKPIECE 
-					&& board.get(index) == WHITEPIECE
-					)
+					(newIndex == index - 14 && board.get(index - 7) == BLACKPIECE)
+					|| (newIndex == index - 18 && board.get(index - 9) == BLACKPIECE)
+					|| (newIndex == index + 14 && board.get(index + 7) == BLACKPIECE)
+					|| (newIndex == index + 18 && board.get(index + 9) == BLACKPIECE)
 				) {
 					isValid = true;					
 				}
@@ -227,17 +192,15 @@ public class Board
 		// promovida a "dama", peça de movimentos mais amplos que a simples
 		// peça. Assinala-se a dama sobrepondo, à pedra promovida, outra da
 		// mesma cor.
-		else if (board.get(index) == WHITEPIECE.toUpperCase()) {
+		else if (piece == WHITEPIECE.toUpperCase() && newPiece == BLANK) {
 			// A dama pode mover-se para trás e para frente em diagonal uma casa
 			// de cada vez, diferente das outras peças, que movimentam-se apenas
 			// para frente em diagonal. A dama pode também tomar outra peça pela
 			// frente ou por trás em diagonal.
-			if ((Math.abs(newIndex - index) % 7 == 0) && board.get(newIndex) == BLANK) {
+			if ((Math.abs(newIndex - index) % 7 == 0)) {
 				isValid = true;
-			
 				for (int i = index + 7; i < newIndex; i += 7) {
 					int count = 0;
-			
 					if (board.get(i) == BLACKPIECE || board.get(i) == BLACKPIECE.toUpperCase())
 						count++;
 				
@@ -245,21 +208,18 @@ public class Board
 						isValid = false;
 				}
 			} 
-			else if (Math.abs(newIndex - index) % 9 == 0 && board.get(newIndex) == BLANK) {
+			else if (Math.abs(newIndex - index) % 9 == 0) {
 				isValid = true;
-				
 				for (int i = index + 9; i < newIndex; i += 9) {
 					int count = 0;
-					
 					if (board.get(i) == BLACKPIECE || board.get(i) == BLACKPIECE.toUpperCase())
 						count++;
 					
 					if (board.get(i) == WHITEPIECE || board.get(i) == WHITEPIECE.toUpperCase() || count > 1)
 						isValid = false;
 				}
-			}
-					
-		} 
+			}			
+		}
 		return isValid;
 	}
 	
@@ -276,12 +236,12 @@ public class Board
 		String newPiece = board.get(newIndex);
 	
 		// pecas simples. apenas se movem uma casa
-		if (piece == BLACKPIECE) {
+		if (piece == BLACKPIECE && newPiece == BLANK) {
 			// A peça movimenta-se em diagonal, sobre as casas escuras, para a
 			// frente, e uma casa de cada vez.
 	
 			// as pecas da esquerda apenas se podem mover para a direita
-			if (index % 8 == 0 && newPiece == BLANK) {
+			if (index % 8 == 0) {
 				// pecas pretas so podem descer V
 				if (newIndex == index + 9)
 					isValid = true;
@@ -293,7 +253,7 @@ public class Board
 			}
 	
 			// as pecas da direita apenas se podem mover para a esqureda
-			else if (index % 8 == 7 && newPiece == BLANK) {
+			else if (index % 8 == 7) {
 				// pretas descem V
 				if (newIndex == index + 7)
 					isValid = true;
@@ -305,11 +265,11 @@ public class Board
 			}
 	
 			// pecas no meio da board
-			else if (newPiece == BLANK) {
+			else {
 				// pretas descem V
 				if ((newIndex == index + 7 || newIndex == index + 9))
 					isValid = true;
-	
+				
 				// pretas que comem V
 				else if ((newIndex == index + 14 && board.get(index + 7) == WHITEPIECE)
 						|| (newIndex == index + 18 && board.get(index + 9) == WHITEPIECE)
@@ -323,9 +283,8 @@ public class Board
 		// promovida a "dama", peça de movimentos mais amplos que a simples
 		// peça. Assinala-se a dama sobrepondo, à pedra promovida, outra da
 		// mesma cor.
-		else if (piece == BLACKPIECE.toUpperCase()) {
-	
-			if ((Math.abs(newIndex - index) % 7 == 0) && newPiece == BLANK) {
+		else if (piece == BLACKPIECE.toUpperCase() && newPiece == BLANK) {
+			if ((Math.abs(newIndex - index) % 7 == 0)) {
 				isValid = true;
 				for (int i = index + 7; i < newIndex; i += 7) {
 					int count = 0;
@@ -336,8 +295,7 @@ public class Board
 						isValid = false;
 				}
 			}
-	
-			else if ((Math.abs(newIndex - index) % 9 == 0) && newPiece == BLANK) {
+			else if ((Math.abs(newIndex - index) % 9 == 0)) {
 				isValid = true;
 				for (int i = index + 9; i < newIndex; i += 9) {
 					int count = 0;
@@ -374,70 +332,73 @@ public class Board
 	 */
 	private void eat(int index, int newIndex) 
 	{
-		if (newIndex == index - 14 && board.get(newIndex) == BLANK && board.get(index) == BLACKPIECE && board.get(index - 7) == WHITEPIECE) 
-			board.set(index - 7, BLANK);
-		
-		else if (newIndex == index + 14 && board.get(newIndex) == BLANK && board.get(index + 7) == WHITEPIECE && board.get(index) == BLACKPIECE) 
-			board.set(index + 7, BLANK);
-		
-		else if (newIndex == index - 14 && board.get(newIndex) == BLANK && board.get(index) == WHITEPIECE && board.get(index - 7) == BLACKPIECE) 
-			board.set(index - 7, BLANK);
-		
-		else if (newIndex == index + 14 && board.get(newIndex) == BLANK && board.get(index + 7) == BLACKPIECE && board.get(index) == WHITEPIECE) 
-			board.set(index + 7, BLANK);
+		String piece = board.get(index);
+		String newPiece = board.get(newIndex);
+		if (newPiece == BLANK) {
+			if (newIndex == index - 14 && piece == BLACKPIECE && board.get(index - 7) == WHITEPIECE) 
+				board.set(index - 7, BLANK);
+			
+			else if (newIndex == index + 14 && piece == BLACKPIECE && board.get(index + 7) == WHITEPIECE) 
+				board.set(index + 7, BLANK);
+			
+			else if (newIndex == index - 14 && piece == WHITEPIECE && board.get(index - 7) == BLACKPIECE) 
+				board.set(index - 7, BLANK);
+			
+			else if (newIndex == index + 14 && piece == WHITEPIECE && board.get(index + 7) == BLACKPIECE) 
+				board.set(index + 7, BLANK);
 
-		else if (newIndex == index - 18 && board.get(newIndex) == BLANK && board.get(index) == BLACKPIECE  && board.get(index - 9) == WHITEPIECE) 
-			board.set(index - 9, BLANK);
-		
-		// pecas pretas que comem V
-		else if (newIndex == index + 18 && board.get(newIndex) == BLANK && board.get(index) == BLACKPIECE && board.get(index + 9) == WHITEPIECE) 
-			board.set(index + 9, BLANK);
-		
-		// pecas branccas que comem V
-		else if ( newIndex == index - 18 && board.get(newIndex) == BLANK && board.get(index) == WHITEPIECE && board.get(index - 9) == BLACKPIECE) 
-			board.set(index - 9, BLANK);
-		
-		else if (newIndex == index + 18 && board.get(newIndex) == BLANK && board.get(index + 9) == BLACKPIECE && board.get(index) == WHITEPIECE) 
-			board.set(index + 9, BLANK);
-		
-		// damas comem
-		else if ((Math.abs(newIndex - index) % 7 == 0) && board.get(index) == WHITEPIECE.toUpperCase()) {
-			for (int i = index + 7; i < newIndex; i += 7) {
-				if (board.get(i) == BLACKPIECE || board.get(i) == BLACKPIECE.toUpperCase())
-					board.set(i, BLANK);
+			else if (newIndex == index - 18 && piece == BLACKPIECE  && board.get(index - 9) == WHITEPIECE) 
+				board.set(index - 9, BLANK);
+			
+			// pecas pretas que comem V
+			else if (newIndex == index + 18 && piece == BLACKPIECE && board.get(index + 9) == WHITEPIECE) 
+				board.set(index + 9, BLANK);
+			
+			// pecas branccas que comem V
+			else if ( newIndex == index - 18 && piece == WHITEPIECE && board.get(index - 9) == BLACKPIECE) 
+				board.set(index - 9, BLANK);
+			
+			else if (newIndex == index + 18 && piece == WHITEPIECE && board.get(index + 9) == BLACKPIECE) 
+				board.set(index + 9, BLANK);
+		}
+		else if (piece == WHITEPIECE.toUpperCase()) {
+			// damas comem
+			if ((Math.abs(newIndex - index) % 7 == 0)) {
+				for (int i = index + 7; i < newIndex; i += 7) {
+					if (board.get(i) == BLACKPIECE || board.get(i) == BLACKPIECE.toUpperCase())
+						board.set(i, BLANK);
+				}
+			}
+			else if ((Math.abs(newIndex - index) % 9 == 0)) {
+				for (int i = index + 9; i < newIndex; i += 9) {
+					if (board.get(i) == BLACKPIECE || board.get(i) == BLACKPIECE.toUpperCase())
+						board.set(i, BLANK);
+				}
 			}
 		}
-
-		else if ((Math.abs(newIndex - index) % 9 == 0) && board.get(index) == WHITEPIECE.toUpperCase()) {
-			for (int i = index + 9; i < newIndex; i += 9) {
-				if (board.get(i) == BLACKPIECE || board.get(i) == BLACKPIECE.toUpperCase())
-					board.set(i, BLANK);
+		else if (piece == BLACKPIECE.toUpperCase()) {
+			if ((Math.abs(newIndex - index) % 7 == 0)) {
+				for (int i = index + 7; i < newIndex; i += 7) {
+					if (board.get(i) == WHITEPIECE || board.get(i) == WHITEPIECE.toUpperCase())
+						board.set(i, BLANK);
+				}
 			}
-		}
-		
-		else if ((Math.abs(newIndex - index) % 7 == 0) && board.get(index) == BLACKPIECE.toUpperCase()) {
-			for (int i = index + 7; i < newIndex; i += 7) {
-				if (board.get(i) == WHITEPIECE || board.get(i) == WHITEPIECE.toUpperCase())
-					board.set(i, BLANK);
+			else if ((Math.abs(newIndex - index) % 9 == 0)) {
+				for (int i = index + 9; i < newIndex; i += 9) {
+					if (board.get(i) == WHITEPIECE || board.get(i) == WHITEPIECE.toUpperCase())
+						board.set(i, BLANK);
+				}
 			}
-		}
-
-		else if ((Math.abs(newIndex - index) % 9 == 0) && board.get(newIndex) == BLACKPIECE.toUpperCase()) {
-			for (int i = index + 9; i < newIndex; i += 9) {
-				if (board.get(i) == WHITEPIECE || board.get(i) == WHITEPIECE.toUpperCase())
-					board.set(i, BLANK);
-			}
-		}
+		}		
 	}
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public ArrayList<String> allValidMovements(boolean player) {
-		
+	public ArrayList<String> allValidMovements(boolean player) 
+	{	
 		String color = player ? WHITEPIECE : BLACKPIECE;
-		
 		ArrayList<String> possibleMovent = new ArrayList<String>();
 		// linhas
 		for(int j = 0; j < 8; j++) {
@@ -457,18 +418,17 @@ public class Board
 	 * @param player 
 	 * @return
 	 */
-	public ArrayList<String> validMovements(int index, boolean player) {
-		
+	public ArrayList<String> validMovements(int index, boolean player) 
+	{
 		ArrayList<String> movements = new ArrayList<String>();
+		String piece = board.get(index);
 		
-		if (board.get(index) == WHITEPIECE || board.get(index) == BLACKPIECE) {
-			
-			int temp = board.get(index) == BLACKPIECE ? 1 : -1;
+		if (piece == WHITEPIECE || piece == BLACKPIECE) {
+			int temp = piece == BLACKPIECE ? 1 : -1;
 			int newRow = (int) Math.floor(index/8) + temp;
 			
 			if (newRow >= 0 || newRow < 8) {
 				int newCol = (index%8) + 1;
-				
 				if (newCol < 8 && board.get(newRow*8 + newCol) == BLANK) {
 					movements.add(index + " " + (newRow*8 + newCol));
 				}
@@ -479,17 +439,13 @@ public class Board
 				}	
 			}
 		}
-		
 		// se for dama
 		else {
-			
 			// TODO damas podem andar mais de uma casa
 			int newRow = (int) (Math.floor(index/8) + 1);
 						
 			if (newRow < 8) {
-				
 				int newCol = (index%8) + 1;
-				
 				if (newCol < 8 && board.get(newRow*8 + newCol) == BLANK) {
 					movements.add(index + " " + (newRow*8 + newCol));
 				}
@@ -499,11 +455,10 @@ public class Board
 					movements.add(index + " " + (newRow*8 + newCol));
 				}		
 			}
+			
 			newRow -= 2;
 			if (newRow >= 0) {
-				
 				int newCol = (index%8) + 1;
-				
 				if (newCol < 8 && board.get(newRow*8 + newCol) == BLANK) {
 					movements.add(index + " " + (newRow*8 + newCol));
 				}
@@ -524,30 +479,29 @@ public class Board
 	 * @param player 
 	 * @return
 	 */
-	private ArrayList<String> getValidSkipMovements(int index, boolean player) {
-		
+	private ArrayList<String> getValidSkipMovements(int index, boolean player) 
+	{
 		ArrayList<String> movements = new ArrayList<String>();
 		ArrayList<Integer> possibilities = new ArrayList<Integer>();
+		String piece = board.get(index);
 		
 		int row = (int) Math.floor(index/8);
 		int col = index%8;
 		
 		//System.out.println("index = " + index + " player = " + player);
 		
-		if (player && board.get(index) == WHITEPIECE) {		
+		if (player && piece == WHITEPIECE) {		
 			//System.out.println("hello1");
 			possibilities.add(fromPoint2Index(row-2, col+2));
 			possibilities.add(fromPoint2Index(row-2, col-2));
 		} 
-		else if (!player && board.get(index) == BLACKPIECE) {
+		else if (!player && piece == BLACKPIECE) {
 			//System.out.println("hello2");
 			possibilities.add(fromPoint2Index(row+2, col+2));
 			possibilities.add(fromPoint2Index(row+2, col-2));
-
 		}
-		else if (board.get(index) == WHITEPIECE.toUpperCase() || board.get(index) == BLACKPIECE.toUpperCase()) {
+		else if (piece == WHITEPIECE.toUpperCase() || piece == BLACKPIECE.toUpperCase()) {
 			//System.out.println("hello3");
-
 			possibilities.add(fromPoint2Index(row+2, col+2));
 			possibilities.add(fromPoint2Index(row+2, col-2));
 			possibilities.add(fromPoint2Index(row-2, col+2));
@@ -556,7 +510,6 @@ public class Board
 		
 		for (int i = 0; i < possibilities.size(); i++) {
 			Integer pos = possibilities.get(i);
-			
 			if(pos > 0 && pos < 64 && board.get(pos) == BLANK && isOpponent(player, midleIndex(index, pos)))
 				movements.add(index + " " + pos);			
 		}
@@ -569,11 +522,10 @@ public class Board
 	 * @param end
 	 * @return
 	 */
-	private int midleIndex(int start, int end) {
-		
+	private int midleIndex(int start, int end) 
+	{
 		int startCol = start%8;
 		int startRow = start/8;
-		
 		int endCol = end%8;
 		int endRow = end/8;
 				
@@ -586,72 +538,67 @@ public class Board
 	 * @param index
 	 * @return
 	 */
-	private boolean isOpponent(boolean player, int index) {
-		if (!player && (board.get(index) == WHITEPIECE || board.get(index) == WHITEPIECE.toUpperCase()))
+	private boolean isOpponent(boolean player, int index) 
+	{
+		String piece = board.get(index);
+		if (!player && (piece == WHITEPIECE || piece == WHITEPIECE.toUpperCase()))
 				return true;
-		if (player && (board.get(index) == BLACKPIECE || board.get(index) == BLACKPIECE.toUpperCase()))
+		if (player && (piece == BLACKPIECE || piece == BLACKPIECE.toUpperCase()))
 			return true;
 		return false;
 		
 	}
 	
 	private int fromPoint2Index (int row, int col) {
-		return (row)*8+ (col);
+		return row*8 + col;
 	}
 
 	/**
 	 * Verifica quando nao existem pecas de uma determinada cor. Caso aconteca, o jogo termina
 	 */
-	public boolean gameOver() {
+	public boolean gameOver() 
+	{
 		return ((!board.contains(BLACKPIECE) && !board.contains(BLACKPIECE.toUpperCase())) 
 				|| (!board.contains(WHITEPIECE) && !board.contains(WHITEPIECE.toUpperCase())));
 	}
 
-	public double getWhiteDamas() {
-
+	public double getWhiteDamas() 
+	{
 		int count = 0;
-		
 		for (String s : board) {
 			if (s == WHITEPIECE.toUpperCase())
 				count++;
 		}
-		
 		return count;
 	}
 
-	public double getWhitePieces() {
-		
+	public double getWhitePieces() 
+	{
 		int count = 0;
-		
 		for (String s : board) {
 			if (s == WHITEPIECE)
 				count++;
 		}
-		
 		return count;
 	}
 
-	public double getBlackDamas() {
-		
-		int count = 0;
-		
+	public double getBlackDamas() 
+	{
+		int count = 0;	
 		for (String s : board) {
 			if (s == BLACKPIECE.toUpperCase())
 				count++;
 		}
-		
 		return count;
 	}
 
-	public double getBlackPieces() {
-		
-		int count = 0;
-		
+	public double getBlackPieces() 
+	{	
+		int count = 0;	
 		for (String s : board) {
 			if (s == BLACKPIECE)
 				count++;
 		}
-		
 		return count;
 	}
 }
