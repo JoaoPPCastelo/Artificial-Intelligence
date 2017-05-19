@@ -59,7 +59,7 @@ public class Game {
 				String start = pos.getInvertedPositions(Integer.parseInt(movs[0]));
 				String end = pos.getInvertedPositions(Integer.parseInt(movs[1]));
 				
-				System.out.print("A jogada do computador: " + start + " " + end);
+				System.out.print("A jogada do computador: " + start.toUpperCase() + " " + end.toUpperCase());
 				
 				isUserPlaying = !isUserPlaying;
 			}

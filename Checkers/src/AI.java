@@ -2,25 +2,29 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class AI {
-	
+public class AI 
+{
 	private int depth;
+	private boolean additional_move = false;
+	private int skippingIndex = -1;
 	
-	public AI(int depth) {
+	public AI(int depth) 
+	{
 		this.depth = depth;
 	}
 	
-	public String makeMovement(Board b, Positions pos) {
-				
+	public String makeMovement(Board b, Positions pos) 
+	{
 		// escolher um mov
 		String mov = minimaxStart(b, depth);
-		
 		//System.out.println("make mov = " + mov);
 		
 		String[] movs = mov.split(" ");
 		
 		// efetuar mov
-		b.move(Integer.parseInt(movs[0]), Integer.parseInt(movs[1]));	
+		b.move(Integer.parseInt(movs[0]), Integer.parseInt(movs[1]));
+		if (additional_move == true)
+			skippingIndex = Integer.parseInt(movs[1]);
 		
 		return mov;
 	}
@@ -31,18 +35,19 @@ public class AI {
 	 * @param depth
 	 * @return
 	 */
-	private String minimaxStart(Board b, int depth) {
-		
+	private String minimaxStart(Board b, int depth) 
+	{
 		boolean player = Game.isUserPlaying;
-		
 		double alpha = Double.NEGATIVE_INFINITY;
 		double beta = Double.POSITIVE_INFINITY;
 		
 		ArrayList<String> possibleMovements;
-		
-		possibleMovements = b.allValidMovements(player);
-		
-		// skiping point????
+		if (skippingIndex == -1)
+			possibleMovements = b.allValidMovements(player);
+		else {
+			possibleMovements = b.getValidSkipMovements(skippingIndex, player);
+			skippingIndex = -1;
+		}
 		
 		ArrayList<Double> scores = new ArrayList<Double>();
 		
@@ -87,32 +92,28 @@ public class AI {
 	 * @param player
 	 * @return
 	 */
-	private Double minimax(Board b, int depth, double alpha, double beta, boolean player) {
-		
+	private Double minimax(Board b, int depth, double alpha, double beta, boolean player) 
+	{
 		if(depth == 0) 
 			return getScore(b, player);
 		
 		ArrayList<String> possibleMovements = b.allValidMovements(player);
 		
 		Board bTemp = null;
-		
 		double value;
 		
 		if (player) {
 			value  = Double.NEGATIVE_INFINITY;
-			
 			for (int i = 0; i < possibleMovements.size(); i++) {
-				
 				bTemp = new Board(b.getBoardRepresentation());
 				
 				String[] index = possibleMovements.get(i).split(" ");
-				
 				bTemp.move(Integer.parseInt(index[0]), Integer.parseInt(index[1]));
 				
 				double result = minimax(bTemp, depth - 1, alpha, beta, !player);
 				
 				value = Math.max(result, value);
-				alpha = Math.min(alpha, value);
+				alpha = Math.max(alpha, value);
 				
 				if (alpha >= beta)
 					break;	
@@ -120,17 +121,15 @@ public class AI {
 		}
 		else {
 			value = Double.POSITIVE_INFINITY;
-			
 			for (int i = 0; i < possibleMovements.size(); i++) {
 				bTemp = new Board(b.getBoardRepresentation());
 				
 				String[] index = possibleMovements.get(i).split(" ");
-				
 				bTemp.move(Integer.parseInt(index[0]), Integer.parseInt(index[1]));
 				
 				double result = minimax(bTemp, depth - 1, alpha, beta, !player);
 				
-				value = Math.max(result, value);
+				value = Math.min(result, value);
 				alpha = Math.min(alpha, value);
 				
 				if (alpha >= beta)
@@ -149,11 +148,9 @@ public class AI {
 	private Double getScore(Board b, boolean player) 
 	{
 		double dama = 1.2;
-		
 		if (player)
 			return b.getWhiteDamas() * dama + b.getWhitePieces() - b.getBlackDamas() * dama - b.getBlackPieces(); 
 		else
 			return b.getBlackDamas() * dama + b.getBlackDamas() - b.getWhiteDamas() * dama - b.getWhitePieces(); 
 	}
-
 }
