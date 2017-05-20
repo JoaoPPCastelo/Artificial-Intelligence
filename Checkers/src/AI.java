@@ -159,7 +159,7 @@ public class AI
 	 */
 	private Double getScore(Board b, boolean player) 
 	{
-		double dama = 1.2;
+		double dama = 1.0;
 		
 		if (player)
 			return b.getWhiteDamas() * dama + b.getWhitePieces() - b.getBlackDamas() * dama - b.getBlackPieces(); 
