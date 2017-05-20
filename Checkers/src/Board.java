@@ -37,7 +37,7 @@ public class Board
 		for (int i = 8; i < 16; i += 2)
 			board.set(i, BLACKPIECE);
 		for (int i = 17; i < 24; i += 2)
-			board.set(i, BLACKDAMA);
+			board.set(i, BLACKPIECE);
 		// pecas brancas
 		for (int i = 40; i < 48; i += 2)
 			board.set(i, WHITEDAMA);
@@ -131,7 +131,7 @@ public class Board
 					isValid = true;
 				
 				// pecas brancas que comem V
-				else if ((newIndex == index - 14 && (board.get(index - 7).equals(BLACKPIECE) || board.get(index - 7).equals(BLACKDAMA)))) {
+				else if ((newIndex == index - 14 && (board.get(index - 7).equals(BLACKPIECE) || board.get(index - 7).equals(BLACKDAMA)))						|| (newIndex == index + 14 && (board.get(index + 7).equals(BLACKPIECE) || board.get(index + 7).equals(BLACKDAMA)))) {
 					isValid = true;					
 				}
 			}
@@ -141,7 +141,7 @@ public class Board
 				if (newIndex == index - 9)
 					isValid = true;
 				// pecas brancas que comem V
-				else if ((newIndex == index - 18 && (board.get(index - 9).equals(BLACKPIECE) || board.get(index - 9).equals(BLACKDAMA)))) {
+				else if ((newIndex == index - 18 && (board.get(index - 9).equals(BLACKPIECE) || board.get(index - 9).equals(BLACKDAMA)))						||(newIndex == index + 18 && (board.get(index + 9).equals(BLACKPIECE) || board.get(index + 9).equals(BLACKDAMA)))) {
 					isValid = true;					
 				}
 			}
@@ -152,7 +152,7 @@ public class Board
 					isValid = true;
 				// brancas que comem V
 				else if ((newIndex == index - 14 && (board.get(index - 7).equals(BLACKPIECE) || board.get(index - 7).equals(BLACKDAMA)))
-					|| (newIndex == index - 18 && (board.get(index - 9).equals(BLACKPIECE) || board.get(index - 9).equals(BLACKDAMA)))				) {
+					|| (newIndex == index - 18 && (board.get(index - 9).equals(BLACKPIECE) || board.get(index - 9).equals(BLACKDAMA))					|| (newIndex == index + 14 && (board.get(index + 7).equals(BLACKPIECE) || board.get(index + 7).equals(BLACKDAMA)))					|| (newIndex == index + 18 && (board.get(index + 9).equals(BLACKPIECE) || board.get(index + 9).equals(BLACKDAMA))))) {
 					isValid = true;					
 				}
 			}
@@ -166,7 +166,7 @@ public class Board
 			// de cada vez, diferente das outras pecas, que movimentam-se apenas
 			// para frente em diagonal. A dama pode tambem tomar outra peca pela
 			// frente ou por tras em diagonal.
-			if ((newIndex == index - 7 || newIndex == index - 9 || newIndex == index + 7 || newIndex == index + 9))				isValid = true;			// brancas que comem V			else if ((newIndex == index + 14 && (board.get(index + 7).equals(BLACKPIECE) || board.get(index + 7).equals(BLACKDAMA)))					|| (newIndex == index - 14 && (board.get(index - 7).equals(BLACKPIECE) || board.get(index - 7).equals(BLACKDAMA)))					|| (newIndex == index - 18 && (board.get(index - 9).equals(BLACKPIECE) || board.get(index - 9).equals(BLACKDAMA)))					|| (newIndex == index + 18 && (board.get(index + 9).equals(BLACKPIECE) || board.get(index + 9).equals(BLACKDAMA)))			) {				isValid = true;								}
+			if ((newIndex == index - 7 || newIndex == index - 9 || newIndex == index + 7 || newIndex == index + 9))				isValid = true;			    int count = 0;			    for (int i = index + 7; i < newIndex; i += 7) {			     if (board.get(i).equals(BLACKPIECE) || board.get(i).equals(BLACKDAMA)) 			      count++;			    			     if (count > 1)			      isValid = false;			    }			    count = 0;			    for (int i = newIndex + 7; i < index; i += 7) {				     if (board.get(i).equals(BLACKPIECE) || board.get(i).equals(BLACKDAMA)) 				      count++;				    				     if (count > 1)				      isValid = false;				    }			    if ((Math.abs(newIndex - index) % 7 == 0) && count == 1)			    	 isValid = true;			     count = 0;			    for (int i = index + 9; i < newIndex; i += 9) {			     if (board.get(i).equals(BLACKPIECE) || board.get(i).equals(BLACKDAMA)) 			      count++;			    			     if (count > 1)			      isValid = false;			    }			    count = 0;			    for (int i = newIndex + 9; i < index; i += 9) {				     if (board.get(i).equals(BLACKPIECE) || board.get(i).equals(BLACKDAMA)) 				      count++;				    				     if (count > 1)				      isValid = false;				    }			    if ((Math.abs(newIndex - index) % 9 == 0) && count == 1 && !(index % 8 == 0))			    	 isValid = true;			   			// brancas que comem V			else if ((newIndex == index + 14 && (board.get(index + 7).equals(BLACKPIECE) || board.get(index + 7).equals(BLACKDAMA)))					|| (newIndex == index - 14 && (board.get(index - 7).equals(BLACKPIECE) || board.get(index - 7).equals(BLACKDAMA)))					|| (newIndex == index - 18 && (board.get(index - 9).equals(BLACKPIECE) || board.get(index - 9).equals(BLACKDAMA)))					|| (newIndex == index + 18 && (board.get(index + 9).equals(BLACKPIECE) || board.get(index + 9).equals(BLACKDAMA)))			) {				isValid = true;								}
 		}
 		return isValid;
 	}
@@ -193,7 +193,7 @@ public class Board
 				if (newIndex == index + 9)
 					isValid = true;
 				// pecas pretas que comem 
-				else if ((newIndex == index + 18 && (board.get(index + 9).equals(WHITEPIECE) || board.get(index + 9).equals(WHITEDAMA))))
+				else if ((newIndex == index + 18 && (board.get(index + 9).equals(WHITEPIECE) || board.get(index + 9).equals(WHITEDAMA)))						|| (newIndex == index - 18 && (board.get(index - 9).equals(WHITEPIECE) || board.get(index - 9).equals(WHITEDAMA))))
 					isValid = true;
 			}
 	
@@ -204,7 +204,7 @@ public class Board
 					isValid = true;
 	
 				// pecas pretas que comem 
-				else if ((newIndex == index + 14 && (board.get(index + 7).equals(WHITEPIECE) || board.get(index + 7).equals(WHITEDAMA))))
+				else if ((newIndex == index + 14 && (board.get(index + 7).equals(WHITEPIECE) || board.get(index + 7).equals(WHITEDAMA)))						|| (newIndex == index - 14 && (board.get(index - 7).equals(WHITEPIECE) || board.get(index - 7).equals(WHITEDAMA))))
 					isValid = true;
 			}
 			// pecas no meio da board
@@ -215,7 +215,7 @@ public class Board
 				
 				// pretas que comem V
 				else if ((newIndex == index + 14 && (board.get(index + 7).equals(WHITEPIECE) || board.get(index + 7).equals(WHITEDAMA)))
-						|| (newIndex == index + 18 &&(board.get(index + 9).equals(WHITEPIECE) || board.get(index + 9).equals(WHITEDAMA))))
+						|| (newIndex == index + 18 &&(board.get(index + 9).equals(WHITEPIECE) || board.get(index + 9).equals(WHITEDAMA)))						|| (newIndex == index - 14 && (board.get(index - 7).equals(WHITEPIECE) || board.get(index - 7).equals(WHITEDAMA)))						|| (newIndex == index - 18 &&(board.get(index - 9).equals(WHITEPIECE) || board.get(index - 9).equals(WHITEDAMA))))
 					isValid = true;
 			}
 		}
@@ -225,7 +225,7 @@ public class Board
 		// pca. Assinala-se a dama sobrepondo, a pedra promovida, outra da
 		// mesma cor.
 		else if (piece.equals(BLACKDAMA) && newPiece.equals(BLANK)) {
-			if ((newIndex == index + 7 || newIndex == index + 9))				isValid = true;						// pretas que comem V			else if ((newIndex == index + 14  && (board.get(index + 7).equals(WHITEPIECE) || board.get(index + 7).equals(WHITEDAMA)))					|| (newIndex == index + 18  &&(board.get(index + 9).equals(WHITEPIECE) || board.get(index + 9).equals(WHITEDAMA)))					|| (newIndex == index - 14 &&  (board.get(index - 7).equals(WHITEPIECE) || board.get(index - 7).equals(WHITEDAMA)))					|| (newIndex == index - 18 && (board.get(index - 9).equals(WHITEPIECE) || board.get(index - 9).equals(WHITEDAMA))))				isValid = true;
+			if ((newIndex == index + 7 || newIndex == index + 9))				isValid = true;						int count = 0;		    for (int i = index + 7; i < newIndex; i += 7) {		     if (board.get(i).equals(WHITEPIECE) || board.get(i).equals(WHITEDAMA)) 		      count++;		    		     if (count > 1)		      isValid = false;		    }		    count = 0;		    for (int i = newIndex + 7; i < index; i += 7) {			     if (board.get(i).equals(WHITEPIECE) || board.get(i).equals(WHITEDAMA)) 			      count++;			    			     if (count > 1)			      isValid = false;			    }		    if ((Math.abs(newIndex - index) % 7 == 0) && count == 1)		    	 isValid = true;		     count = 0;		    for (int i = index + 9; i < newIndex; i += 9) {		     if (board.get(i).equals(WHITEPIECE) || board.get(i).equals(WHITEDAMA)) 		      count++;		    		     if (count > 1)		      isValid = false;		    }		    count = 0;		    for (int i = newIndex + 9; i < index; i += 9) {			     if (board.get(i).equals(WHITEPIECE) || board.get(i).equals(WHITEDAMA)) 			      count++;			    			     if (count > 1)			      isValid = false;			    }		    if ((Math.abs(newIndex - index) % 9 == 0) && count == 1 && !(index % 8 == 0))		    	 isValid = true;		    			// pretas que comem V			else if ((newIndex == index + 14  && (board.get(index + 7).equals(WHITEPIECE) || board.get(index + 7).equals(WHITEDAMA)))					|| (newIndex == index + 18  &&(board.get(index + 9).equals(WHITEPIECE) || board.get(index + 9).equals(WHITEDAMA)))					|| (newIndex == index - 14 &&  (board.get(index - 7).equals(WHITEPIECE) || board.get(index - 7).equals(WHITEDAMA)))					|| (newIndex == index - 18 && (board.get(index - 9).equals(WHITEPIECE) || board.get(index - 9).equals(WHITEDAMA))))				isValid = true;
 		}
 		return isValid;
 	}	
