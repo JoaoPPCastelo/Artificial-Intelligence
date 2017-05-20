@@ -40,7 +40,7 @@ public class Board
 			board.set(i, BLACKPIECE);
 		// pecas brancas
 		for (int i = 40; i < 48; i += 2)
-			board.set(i, WHITEDAMA);
+			board.set(i, WHITEPIECE);
 		for (int i = 49; i < 56; i += 2)
 			board.set(i, WHITEPIECE);
 		for (int i = 56; i < 64; i += 2)
